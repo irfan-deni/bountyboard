@@ -13,7 +13,7 @@
             <a href="{% url 'home' %}" class="no-underline text-ink font-semibold text-lg tracking-tight">BountyBoard</a>
             <nav class="flex items-center gap-6 text-sm font-medium">
                 {% if user.is_authenticated %}
-                    <span class="text-muted">Hi, {{ user.username }}</span>
+                    <a href="{% url 'profile' %}" class="text-muted no-underline hover:text-primary">Hi, {{ user.username }}</a>
                     <a href="{% url 'task_create' %}" class="text-ink no-underline hover:text-primary">Post a Bounty</a>
                     <form method="post" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}

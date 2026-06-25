@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile_user.username }} — BountyBoard{% endblock %}
+
+{% block content %}
+<section class="mb-10 rounded-lg border border-hairline bg-surface-card p-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-5">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="{{ profile_user.username }}"
+                     class="h-20 w-20 rounded-full border border-hairline object-cover">
+            {% else %}
+                <span class="flex h-20 w-20 items-center justify-center rounded-full bg-surface-strong text-2xl font-semibold text-ink">{{ profile_user.username|make_list|first|upper }}</span>
+            {% endif %}
+
+            <div>
+                <h1 class="text-3xl font-normal tracking-tight text-ink">{{ profile_user.username }}</h1>
+                {% if profile.phone %}
+                    <p class="mt-2 text-sm font-medium text-muted">{{ profile.phone }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if is_own_profile %}
+            <a href="{% url 'profile_edit' %}" class="inline-flex rounded-md border border-hairline bg-surface-card px-5 py-2.5 text-sm font-medium text-ink no-underline hover:border-hairline-strong hover:text-primary">Edit profile</a>
+        {% endif %}
+    </div>
+
+    <div class="mt-6 border-t border-hairline-soft pt-6">
+        {% if profile.bio %}
+            <p class="text-base leading-relaxed text-body whitespace-pre-line">{{ profile.bio }}</p>
+        {% else %}
+            <p class="text-sm text-muted">No bio yet.</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="mb-10">
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Posted tasks</h2>
+
+    {% if posted_tasks %}
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {% for task in posted_tasks %}
+                <a href="{% url 'task_detail' task.id %}" class="flex h-full flex-col justify-between rounded-lg border border-hairline bg-surface-card p-6 no-underline hover:border-hairline-strong">
+                    <h3 class="text-lg font-semibold leading-tight text-ink">{{ task.title }}</h3>
+                    <span class="mt-4 inline-flex w-fit bg-surface-strong px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-ink">{{ task.get_status_display|default:task.status }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center">
+            <p class="text-sm text-muted">No posted tasks yet.</p>
+        </section>
+    {% endif %}
+</section>
+
+<section>
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Claimed / Completed tasks</h2>
+
+    {% if claimed_tasks %}
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {% for task in claimed_tasks %}
+                <a href="{% url 'task_detail' task.id %}" class="flex h-full flex-col justify-between rounded-lg border border-hairline bg-surface-card p-6 no-underline hover:border-hairline-strong">
+                    <h3 class="text-lg font-semibold leading-tight text-ink">{{ task.title }}</h3>
+                    <span class="mt-4 inline-flex w-fit bg-surface-strong px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-ink">{{ task.get_status_display|default:task.status }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center">
+            <p class="text-sm text-muted">No claimed or completed tasks yet.</p>
+        </section>
+    {% endif %}
+</section>
+{% endblock %}
