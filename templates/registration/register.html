@@ -3,43 +3,44 @@
 {% block title %}Register | BountyBoard{% endblock %}
 
 {% block content %}
-<h2 class="text-2xl font-semibold tracking-tight text-ink mb-5">Register</h2>
+<div class="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center -my-12">
+    <div class="rounded-lg border border-hairline bg-canvas p-8 max-w-sm w-full">
+        <h2 class="text-2xl font-semibold tracking-tight text-ink mb-5">Register</h2>
+        <form method="post">
+            {% csrf_token %}
 
-<div class="rounded-lg border border-hairline bg-canvas p-8 max-w-sm">
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="mb-5">
-            <label for="id_username" class="block font-semibold text-sm mb-2 text-ink">Username</label>
-            <input type="text" name="username" id="id_username" maxlength="150" required
-                   class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
-            <p class="text-ink-muted-48 text-xs mt-1">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
-        </div>
-
-        <div class="mb-5">
-            <label for="id_password1" class="block font-semibold text-sm mb-2 text-ink">Password</label>
-            <input type="password" name="password1" id="id_password1" required
-                   class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
-            <p class="text-ink-muted-48 text-xs mt-1">Your password can't be too similar to your other personal information. It must contain at least 8 characters and can't be entirely numeric.</p>
-        </div>
-
-        <div class="mb-5">
-            <label for="id_password2" class="block font-semibold text-sm mb-2 text-ink">Confirm password</label>
-            <input type="password" name="password2" id="id_password2" required
-                   class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
-        </div>
-
-        {% if form.errors %}
-            <div class="text-red-600 text-sm mb-4 font-medium">
-                {% for field, errors in form.errors.items %}
-                    {% for error in errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                {% endfor %}
+            <div class="mb-5">
+                <label for="id_username" class="block font-semibold text-sm mb-2 text-ink">Username</label>
+                <input type="text" name="username" id="id_username" maxlength="150" required
+                       class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
+                <p class="text-ink-muted-48 text-xs mt-1">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
             </div>
-        {% endif %}
 
-        <button type="submit" class="w-full rounded-full bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-focus cursor-pointer">Register</button>
-    </form>
+            <div class="mb-5">
+                <label for="id_password1" class="block font-semibold text-sm mb-2 text-ink">Password</label>
+                <input type="password" name="password1" id="id_password1" required
+                       class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
+                <p class="text-ink-muted-48 text-xs mt-1">Your password can't be too similar to your other personal information. It must contain at least 8 characters and can't be entirely numeric.</p>
+            </div>
+
+            <div class="mb-5">
+                <label for="id_password2" class="block font-semibold text-sm mb-2 text-ink">Confirm password</label>
+                <input type="password" name="password2" id="id_password2" required
+                       class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
+            </div>
+
+            {% if form.errors %}
+                <div class="text-red-600 text-sm mb-4 font-medium">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="w-full rounded-full bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-focus cursor-pointer">Register</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

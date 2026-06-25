@@ -9,15 +9,15 @@
 </head>
 <body class="bg-canvas text-ink font-sans antialiased">
     <header class="bg-surface-black text-on-dark">
-        <div class="max-w-5xl mx-auto px-5 h-11 flex items-center justify-between">
-            <a href="{% url 'home' %}" class="no-underline text-on-dark font-semibold text-sm tracking-tight">BountyBoard</a>
-            <nav class="flex items-center gap-4 text-xs tracking-tight">
+        <div class="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
+            <a href="{% url 'home' %}" class="no-underline text-on-dark font-bold text-lg tracking-tight">BountyBoard</a>
+            <nav class="flex items-center gap-5 text-sm tracking-tight">
                 {% if user.is_authenticated %}
                     <span class="text-body-muted">Hi, {{ user.username }}</span>
                     <a href="{% url 'task_create' %}" class="text-on-dark no-underline hover:text-body-muted">Post a Bounty</a>
                     <form method="post" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}
-                        <button type="submit" class="text-on-dark hover:text-body-muted bg-transparent border-none cursor-pointer text-xs tracking-tight">Log Out</button>
+                        <button type="submit" class="text-on-dark hover:text-body-muted bg-transparent border-none cursor-pointer text-sm tracking-tight">Log Out</button>
                     </form>
                 {% else %}
                     <a href="{% url 'login' %}" class="text-on-dark no-underline hover:text-body-muted">Log In</a>
