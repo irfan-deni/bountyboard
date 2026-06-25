@@ -45,3 +45,6 @@ dist/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Claude Code local state (never commit)
+.claude/
