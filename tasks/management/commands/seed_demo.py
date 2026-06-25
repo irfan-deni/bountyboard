@@ -5,52 +5,68 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from tasks.models import Bid, Review, Task
-from users.models import Badge, Profile
+from tasks.models import Review, Task
+from users.models import Profile
+
 
 # Default password applied to any demo user we create for the first time.
 DEMO_PASSWORD = "demo12345"
 
-# XP -> rank tiers (kept in sync with users.models.Profile.RANK_CHOICES).
-RANK_TIERS = [
-    (1300, "elite"),
-    (450, "expert"),
-    (120, "apprentice"),
-    (0, "novice"),
-]
-
-
-def rank_for_xp(xp):
-    """Return the rank string matching an XP value."""
-    for threshold, rank in RANK_TIERS:
-        if xp >= threshold:
-            return rank
-    return "novice"
-
-
-# Demo users: (username, first_name, email, role, xp, rating, bio).
-# Posters keep default xp/rank; hunters get varied progression.
+# Demo students: (username, first_name, email, phone, bio).
 DEMO_USERS = [
-    # Posters
-    ("alya", "Alya", "alya@demo.unikl.my", "poster", 0, 4.7,
-     "Final-year student who always has errands to delegate."),
-    ("hafiz", "Hafiz", "hafiz@demo.unikl.my", "poster", 0, 4.5,
-     "Club committee member posting design and media gigs."),
-    ("mei", "Mei", "mei@demo.unikl.my", "poster", 0, 4.9,
-     "Research assistant who outsources reading and admin work."),
-    # Hunters
-    ("daniel", "Daniel", "daniel@demo.unikl.my", "hunter", 0, 4.2,
-     "New hunter eager to take on first few campus tasks."),
-    ("nurin", "Nurin", "nurin@demo.unikl.my", "hunter", 120, 4.4,
-     "Apprentice hunter who loves quick delivery runs."),
-    ("ahmad", "Ahmad", "ahmad@demo.unikl.my", "hunter", 450, 4.6,
-     "Expert coder happy to debug Django and Python issues."),
-    ("priya", "Priya", "priya@demo.unikl.my", "hunter", 1300, 4.8,
-     "Elite all-rounder with a strong track record on campus."),
+    (
+        "alya",
+        "Alya",
+        "alya@demo.unikl.my",
+        "+60 12-345 6789",
+        "Final-year student who always has errands to delegate.",
+    ),
+    (
+        "hafiz",
+        "Hafiz",
+        "hafiz@demo.unikl.my",
+        "+60 13-234 5678",
+        "Club committee member, posts media and design gigs.",
+    ),
+    (
+        "mei",
+        "Mei",
+        "mei@demo.unikl.my",
+        "+60 11-2345 6789",
+        "",
+    ),
+    (
+        "daniel",
+        "Daniel",
+        "daniel@demo.unikl.my",
+        "+60 16-987 6543",
+        "New on campus and keen to pick up quick tasks.",
+    ),
+    (
+        "nurin",
+        "Nurin",
+        "nurin@demo.unikl.my",
+        "+60 17-555 1234",
+        "Loves delivery runs between classes.",
+    ),
+    (
+        "ahmad",
+        "Ahmad",
+        "ahmad@demo.unikl.my",
+        "+60 19-321 7788",
+        "",
+    ),
+    (
+        "priya",
+        "Priya",
+        "priya@demo.unikl.my",
+        "+60 14-678 9900",
+        "Happy to debug Django and Python issues for fellow students.",
+    ),
 ]
 
-# Demo tasks: (title, description, category, bounty, deadline_in_days, status).
-# Status assignment of 'claimed'/'completed' tasks is handled in handle().
+# Demo tasks: (title, description, category, bounty, deadline_in_days).
+# Status and hunter assignment are handled in handle().
 DEMO_TASKS = [
     (
         "Print 20 pages & deliver to Dewan Sri Wawasan",
@@ -59,7 +75,6 @@ DEMO_TASKS = [
         "delivery",
         "5.00",
         2,
-        "open",
     ),
     (
         "Debug a Django view error",
@@ -68,16 +83,14 @@ DEMO_TASKS = [
         "coding",
         "30.00",
         5,
-        "completed",
     ),
     (
         "Take portfolio photos around campus",
-        "Looking for a hunter to shoot 15-20 candid and posed portfolio photos "
+        "Looking for someone to shoot 15-20 candid and posed portfolio photos "
         "around campus landmarks. Bring your own camera.",
         "photography",
         "20.00",
         7,
-        "claimed",
     ),
     (
         "Buy lunch from cafe & deliver to library",
@@ -86,7 +99,6 @@ DEMO_TASKS = [
         "delivery",
         "8.00",
         1,
-        "open",
     ),
     (
         "Summarize three journal articles",
@@ -95,7 +107,6 @@ DEMO_TASKS = [
         "tutoring",
         "15.00",
         4,
-        "open",
     ),
 ]
 
@@ -103,20 +114,28 @@ DEMO_TASKS = [
 class Command(BaseCommand):
     help = "Seed realistic demo data for BountyBoard (idempotent)."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--fresh",
+            action="store_true",
+            help="Delete existing demo data (reviews, tasks, profiles, and "
+            "non-superuser users) before seeding.",
+        )
+
+    def _flush(self):
+        Review.objects.all().delete()
+        Task.objects.all().delete()
+        Profile.objects.all().delete()
+        User.objects.filter(is_superuser=False).delete()
+
     @transaction.atomic
     def handle(self, *args, **options):
-        posters, hunters = self._seed_users()
-        tasks = self._seed_tasks(posters, hunters)
-        self._seed_bids(tasks, hunters)
-        self._seed_reviews(tasks)
-        self._seed_badges(hunters)
-        self._report()
+        if options["fresh"]:
+            self._flush()
 
-    # ------------------------------------------------------------------ users
-    def _seed_users(self):
-        posters = {}
-        hunters = {}
-        for (username, first_name, email, role, xp, rating, bio) in DEMO_USERS:
+        # ------------------------------------------------------------- users
+        users = {}
+        for username, first_name, email, phone, bio in DEMO_USERS:
             user, created = User.objects.get_or_create(
                 username=username,
                 defaults={"first_name": first_name, "email": email},
@@ -125,146 +144,80 @@ class Command(BaseCommand):
                 user.set_password(DEMO_PASSWORD)
                 user.save()
 
-            Profile.objects.get_or_create(
+            Profile.objects.update_or_create(
                 user=user,
-                defaults={
-                    "role": role,
-                    "xp": xp,
-                    "rank": rank_for_xp(xp),
-                    "rating": rating,
-                    "bio": bio,
-                },
+                defaults={"phone": phone, "bio": bio},
             )
+            users[username] = user
 
-            if role == "poster":
-                posters[username] = user
+        usernames = [row[0] for row in DEMO_USERS]
+
+        # ------------------------------------------------------------- tasks
+        # Cycle posters across the demo users; mark one task completed and one
+        # claimed, each with a hunter who is not the poster, rest stay open.
+        tasks = []
+        for index, (title, description, category, bounty, days) in enumerate(DEMO_TASKS):
+            poster = users[usernames[index % len(usernames)]]
+
+            if index == 0:
+                status = "completed"
+            elif index == 1:
+                status = "claimed"
             else:
-                hunters[username] = user
-        return posters, hunters
+                status = "open"
 
-    # ------------------------------------------------------------------ tasks
-    def _seed_tasks(self, posters, hunters):
-        poster_cycle = list(posters.values())
-        # A stable hunter to attach to claimed/completed tasks.
-        assigned_hunter = hunters.get("priya") or next(iter(hunters.values()))
-
-        tasks = {}
-        for index, (title, description, category, bounty, days, status) in enumerate(
-            DEMO_TASKS
-        ):
-            poster = poster_cycle[index % len(poster_cycle)]
-            deadline = timezone.now() + datetime.timedelta(days=days)
-
-            defaults = {
-                "poster": poster,
-                "description": description,
-                "category": category,
-                "bounty": bounty,
-                "status": status,
-                "deadline": deadline,
-            }
-            # Claimed and completed tasks need an assigned hunter.
+            hunter = None
             if status in ("claimed", "completed"):
-                defaults["hunter"] = assigned_hunter
+                for candidate_username in usernames:
+                    candidate = users[candidate_username]
+                    if candidate != poster:
+                        hunter = candidate
+                        break
 
             task, _ = Task.objects.get_or_create(
                 title=title,
-                defaults=defaults,
+                defaults={
+                    "poster": poster,
+                    "hunter": hunter,
+                    "description": description,
+                    "category": category,
+                    "bounty": bounty,
+                    "status": status,
+                    "deadline": timezone.now() + datetime.timedelta(days=days),
+                },
             )
-            tasks[title] = task
-        return tasks
+            tasks.append(task)
 
-    # ------------------------------------------------------------------- bids
-    def _seed_bids(self, tasks, hunters):
-        # (task title, hunter username, message) for a couple of open tasks.
-        bid_specs = [
-            (
-                "Print 20 pages & deliver to Dewan Sri Wawasan",
-                "daniel",
-                "I'm near the print shop now and can deliver within the hour.",
-            ),
-            (
-                "Print 20 pages & deliver to Dewan Sri Wawasan",
-                "nurin",
-                "Happy to take this, I pass Dewan Sri Wawasan on my way.",
-            ),
-            (
-                "Summarize three journal articles",
-                "ahmad",
-                "I summarize papers often and can turn this around by tomorrow.",
-            ),
-        ]
-        for title, username, message in bid_specs:
-            task = tasks.get(title)
-            hunter = hunters.get(username)
-            if task is None or hunter is None:
-                continue
-            Bid.objects.get_or_create(
-                task=task,
-                hunter=hunter,
-                defaults={"message": message},
+        # ----------------------------------------------------------- reviews
+        # One review left by the poster for the hunter on the completed task.
+        completed_task = tasks[0]
+        if completed_task.hunter is not None:
+            Review.objects.get_or_create(
+                task=completed_task,
+                reviewer=completed_task.poster,
+                reviewee=completed_task.hunter,
+                defaults={
+                    "rating": 5,
+                    "comment": "Delivered everything on time and was easy to deal "
+                    "with. Would hire again!",
+                },
             )
 
-    # ---------------------------------------------------------------- reviews
-    def _seed_reviews(self, tasks):
-        # Poster reviews the assigned hunter on the completed task.
-        completed = tasks.get("Debug a Django view error")
-        if completed is None or completed.hunter is None:
-            return
-        Review.objects.get_or_create(
-            task=completed,
-            reviewer=completed.poster,
-            reviewee=completed.hunter,
-            defaults={
-                "rating": 5,
-                "comment": "Found the bug fast and explained the fix clearly. "
-                "Would hire again!",
-            },
-        )
-
-    # ----------------------------------------------------------------- badges
-    def _seed_badges(self, hunters):
-        if not hunters:
-            return
-        # Award the 'Reliable' badge to the highest-XP hunter. Every demo user
-        # gets a Profile in _seed_users, so look the winner up by XP directly.
-        top_profile = (
-            Profile.objects.filter(user__in=hunters.values())
-            .order_by("-xp")
-            .first()
-        )
-        if top_profile is None:
-            return
-        Badge.objects.get_or_create(
-            profile=top_profile,
-            name="Reliable",
-            defaults={
-                "description": "Consistently completes tasks on time with great reviews.",
-            },
-        )
-
-    # ----------------------------------------------------------------- report
-    def _report(self):
-        self.stdout.write(self.style.SUCCESS("Demo data seeded (idempotent)."))
+        # ------------------------------------------------------------ report
         self.stdout.write(
             self.style.SUCCESS(
+                "Demo data seeded (idempotent). "
                 "Users: {users} | Profiles: {profiles} | Tasks: {tasks} "
                 "(open={open}, claimed={claimed}, completed={completed}) | "
-                "Bids: {bids} | Reviews: {reviews} | Badges: {badges}".format(
-                    users=User.objects.count(),
+                "Reviews: {reviews} | Demo password: '{password}'".format(
+                    users=User.objects.filter(is_superuser=False).count(),
                     profiles=Profile.objects.count(),
                     tasks=Task.objects.count(),
                     open=Task.objects.filter(status="open").count(),
                     claimed=Task.objects.filter(status="claimed").count(),
                     completed=Task.objects.filter(status="completed").count(),
-                    bids=Bid.objects.count(),
                     reviews=Review.objects.count(),
-                    badges=Badge.objects.count(),
+                    password=DEMO_PASSWORD,
                 )
-            )
-        )
-        self.stdout.write(
-            self.style.SUCCESS(
-                "Demo login password for seeded users: '%s'" % DEMO_PASSWORD
             )
         )
