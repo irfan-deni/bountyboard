@@ -153,10 +153,22 @@ Build and start the app with Docker Compose:
 docker compose up --build
 ```
 
+If port `8000` is already in use, run it on another port:
+
+```bash
+APP_PORT=8001 docker compose up --build
+```
+
 Open the app at:
 
 ```text
 http://localhost:8000/
+```
+
+If you used `APP_PORT=8001`, open:
+
+```text
+http://localhost:8001/
 ```
 
 Open the Django admin at:

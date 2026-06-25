@@ -1,9 +1,14 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      network: host
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     ports:
-      - "8000:8000"
+      - "${APP_PORT:-8000}:8000"
     volumes:
       - .:/app
       - sqlite_data:/app/data
