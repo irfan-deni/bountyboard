@@ -4,69 +4,105 @@
 
 {% block content %}
 <section class="grid gap-6 lg:grid-cols-[1fr_360px]">
-    <article class="rounded-lg border border-hairline bg-surface-card p-8">
+    <article class="pixel-panel p-8">
         <div class="mb-5 flex items-start justify-between gap-4">
-            <span class="bg-surface-strong text-ink px-2.5 py-1 text-xs font-semibold uppercase tracking-widest">{{ task.get_category_display }}</span>
-            <span class="text-2xl font-semibold text-ink">RM {{ task.bounty }}</span>
+            <span class="border-4 border-ink bg-surface-strong px-2.5 py-1 text-xs font-bold uppercase tracking-widest text-ink">{{ task.get_category_display }}</span>
+            <span class="border-4 border-ink bg-primary px-4 py-2 text-2xl font-bold text-ink">RM {{ task.bounty }}</span>
         </div>
-        <h1 class="text-3xl font-normal leading-tight tracking-tight text-ink">{{ task.title }}</h1>
-        <div class="mt-4 flex flex-wrap gap-2 text-sm text-muted">
-            <span>{{ task.get_status_display }}</span>
-            <span>&middot;</span>
-            <span>Due {{ task.deadline|date:"M d, Y g:i A" }}</span>
-            <span>&middot;</span>
-            <span>By @{{ task.poster.username }}</span>
+        <h1 class="font-display text-lg leading-relaxed text-ink">{{ task.title }}</h1>
+        <div class="mt-5 flex flex-wrap gap-2 text-sm font-bold uppercase text-ink">
+            <span class="border-4 border-ink bg-canvas-soft px-3 py-1">{{ task.get_status_display }}</span>
+            <span class="border-4 border-ink bg-canvas-soft px-3 py-1">Due {{ task.deadline|date:"M d, Y g:i A" }}</span>
+            <span class="border-4 border-ink bg-canvas-soft px-3 py-1">By @{{ task.poster.username }}</span>
         </div>
-        <p class="mt-6 rounded-md bg-canvas-soft px-5 py-4 text-sm font-medium text-ink">Payment is arranged outside BountyBoard. The app only tracks the bounty, claim, proof, completion, and review.</p>
-        <p class="mt-8 whitespace-pre-line leading-relaxed text-body">{{ task.description }}</p>
+        <p class="mt-6 border-4 border-ink bg-canvas-soft px-5 py-4 text-sm font-bold uppercase tracking-wide text-ink">Payment is arranged outside BountyBoard. The app only tracks the bounty, claim, proof, completion, and review.</p>
+        <p class="mt-8 whitespace-pre-line text-lg leading-relaxed text-body">{{ task.description }}</p>
     </article>
 
     <aside class="space-y-5">
-        <div class="rounded-lg border border-hairline bg-surface-card p-6">
-            <h2 class="text-lg font-semibold text-ink">Claim this bounty</h2>
+        <div class="pixel-panel-sm p-6">
+            <h2 class="font-display text-xs leading-relaxed text-ink">Quest Actions</h2>
             {% if task.status == 'open' %}
                 {% if user.is_authenticated %}
                     <form class="mt-4 space-y-4" method="post" action="{% url 'task_claim' task.id %}">
                         {% csrf_token %}
-                        {{ bid_form.message }}
-                        <button class="w-full rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Claim Bounty</button>
+                        <button class="pixel-button w-full justify-center cursor-pointer" type="submit">Accept Quest</button>
                     </form>
                 {% else %}
-                    <p class="mt-3 text-sm text-muted">Log in before claiming this task.</p>
-                    <a href="{% url 'login' %}" class="mt-4 inline-flex rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-on-primary no-underline hover:bg-primary-active">Log in</a>
+                    <p class="mt-3 text-base text-body">Log in before claiming this task.</p>
+                    <a href="{% url 'login' %}" class="pixel-button mt-4">Log in</a>
                 {% endif %}
             {% else %}
-                <p class="mt-3 text-sm text-muted">This bounty has already been claimed or closed.</p>
+                <p class="mt-3 text-base text-body">This quest has already been claimed or closed.</p>
+            {% endif %}
+
+            {% if task.status == 'claimed' and user == task.hunter %}
+                <form class="mt-5 space-y-4 border-t-4 border-ink pt-5" method="post" action="{% url 'task_submit_proof' task.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-ink">Submit proof</h3>
+                    {{ proof_form.proof_note }}
+                    {{ proof_form.proof_image }}
+                    <button class="pixel-button w-full justify-center cursor-pointer" type="submit">Submit Proof</button>
+                </form>
+            {% endif %}
+
+            {% if task.status == 'claimed' and user == task.poster %}
+                <form class="mt-5 border-t-4 border-ink pt-5" method="post" action="{% url 'task_complete' task.id %}">
+                    {% csrf_token %}
+                    <p class="mb-3 text-base text-body">Approve completion after checking the hunter's proof and arranging outside payment.</p>
+                    <button class="pixel-button w-full justify-center cursor-pointer" type="submit">Approve Clear</button>
+                </form>
             {% endif %}
         </div>
 
-        <div class="rounded-lg border border-hairline bg-surface-card p-6">
-            <h2 class="text-lg font-semibold text-ink">Hunter messages</h2>
-            <div class="mt-4 space-y-3">
-                {% for bid in bids %}
-                    <div class="bg-canvas-soft p-4 rounded-md">
-                        <p class="text-sm font-semibold text-ink">@{{ bid.hunter.username }}</p>
-                        <p class="mt-1 text-sm leading-relaxed text-body">{{ bid.message }}</p>
-                    </div>
-                {% empty %}
-                    <p class="text-sm text-muted">No messages yet.</p>
-                {% endfor %}
-            </div>
+        <div class="pixel-panel-sm p-6">
+            <h2 class="font-display text-xs leading-relaxed text-ink">Quest Status</h2>
+            {% if task.hunter %}
+                <p class="mt-3 text-base text-body">Claimed by <strong>@{{ task.hunter.username }}</strong>.</p>
+            {% else %}
+                <p class="mt-3 text-base text-body">No hunter has claimed this bounty yet.</p>
+            {% endif %}
+
+            {% if task.proof_note or task.proof_image %}
+                <div class="mt-5 border-t-4 border-ink pt-5">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-ink">Submitted proof</h3>
+                    {% if task.proof_note %}<p class="mt-2 text-base leading-relaxed text-body">{{ task.proof_note }}</p>{% endif %}
+                    {% if task.proof_image %}<a class="pixel-button mt-3 px-4 py-2" href="{{ task.proof_image.url }}" target="_blank">View Image</a>{% endif %}
+                </div>
+            {% endif %}
         </div>
     </aside>
 </section>
 
+{% if can_review %}
+    <section class="pixel-panel mt-8 p-6">
+        <h3 class="font-display text-sm leading-relaxed text-ink">Leave a review</h3>
+        <form class="mt-5 space-y-4" method="post" action="{% url 'task_review' task.id %}">
+            {% csrf_token %}
+            <div>
+                <label class="pixel-label" for="{{ review_form.rating.id_for_label }}">Rating</label>
+                {{ review_form.rating }}
+            </div>
+            <div>
+                <label class="pixel-label" for="{{ review_form.comment.id_for_label }}">Comment</label>
+                {{ review_form.comment }}
+            </div>
+            <button class="pixel-button cursor-pointer" type="submit">Submit Review</button>
+        </form>
+    </section>
+{% endif %}
+
 {% if reviews %}
-    <h3 class="text-xl font-normal tracking-tight mt-12 mb-5 text-ink">Reviews</h3>
+    <h3 class="font-display text-sm leading-relaxed mt-12 mb-5 text-ink">Reviews</h3>
     {% for review in reviews %}
-        <div class="rounded-lg border border-hairline bg-surface-card p-6 mb-3">
-            <p class="font-medium text-ink text-sm">
+        <div class="pixel-panel-sm p-6 mb-5">
+            <p class="font-bold text-ink text-sm uppercase tracking-wide">
                 {{ review.reviewer.username }}
                 <span class="text-muted">&rarr;</span>
                 {{ review.reviewee.username }}
                 <span class="text-ink ml-2">{{ review.rating }}/5</span>
             </p>
-            <p class="text-body mt-1 text-sm leading-relaxed">{{ review.comment }}</p>
+            <p class="text-body mt-2 text-base leading-relaxed">{{ review.comment }}</p>
             <p class="text-muted text-xs mt-2">{{ review.created_at|date:"M d, Y" }}</p>
         </div>
     {% endfor %}

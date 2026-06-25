@@ -13,7 +13,6 @@ class TaskAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     ordering = ('-created_at',)
     readonly_fields = ('created_at',)
-    autocomplete_fields = ('poster', 'hunter')
     list_per_page = 25
     fieldsets = (
         ('Task', {
@@ -21,6 +20,9 @@ class TaskAdmin(admin.ModelAdmin):
         }),
         ('Status', {
             'fields': ('status', 'created_at'),
+        }),
+        ('Completion Proof', {
+            'fields': ('proof_note', 'proof_image'),
         }),
     )
 
@@ -33,4 +35,3 @@ class ReviewAdmin(admin.ModelAdmin):
     date_hierarchy = 'created_at'
     ordering = ('-created_at',)
     readonly_fields = ('created_at',)
-    autocomplete_fields = ('task', 'reviewer', 'reviewee')

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile | BountyBoard{% endblock %}
+
+{% block content %}
+<section class="pixel-panel mb-10 p-6">
+    <p class="mb-3 inline-block border-4 border-ink bg-primary px-3 py-1 text-xs font-bold uppercase tracking-widest text-ink">Player Card</p>
+    <h1 class="font-display text-lg leading-relaxed text-ink">My Profile</h1>
+    <p class="mt-3 text-lg leading-relaxed text-body">Track your posted bounties, claimed tasks, and reviews.</p>
+</section>
+
+<section class="grid gap-6 lg:grid-cols-2">
+    <div class="pixel-panel-sm p-6">
+        <h2 class="font-display text-xs leading-relaxed text-ink mb-4">Posted quests</h2>
+        <div class="space-y-3">
+            {% for task in posted_tasks %}
+                <a href="{% url 'task_detail' task.id %}" class="block border-4 border-ink bg-canvas-soft p-4 no-underline hover:bg-surface-strong">
+                    <p class="font-bold text-ink">{{ task.title }}</p>
+                    <p class="mt-1 text-sm font-bold uppercase text-muted">RM {{ task.bounty }} · {{ task.get_status_display }}</p>
+                </a>
+            {% empty %}
+                <p class="text-sm text-muted">You have not posted any bounties yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="pixel-panel-sm p-6">
+        <h2 class="font-display text-xs leading-relaxed text-ink mb-4">Claimed quests</h2>
+        <div class="space-y-3">
+            {% for task in claimed_tasks %}
+                <a href="{% url 'task_detail' task.id %}" class="block border-4 border-ink bg-canvas-soft p-4 no-underline hover:bg-surface-strong">
+                    <p class="font-bold text-ink">{{ task.title }}</p>
+                    <p class="mt-1 text-sm font-bold uppercase text-muted">RM {{ task.bounty }} · {{ task.get_status_display }}</p>
+                </a>
+            {% empty %}
+                <p class="text-sm text-muted">You have not claimed any tasks yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="pixel-panel-sm p-6 mt-8">
+    <h2 class="font-display text-xs leading-relaxed text-ink mb-4">Received reviews</h2>
+    <div class="space-y-3">
+        {% for review in reviews %}
+            <div class="border-4 border-ink bg-canvas-soft p-4">
+                <p class="font-bold uppercase text-ink">{{ review.rating }}/5 from @{{ review.reviewer.username }}</p>
+                <p class="mt-2 text-base text-body">{{ review.comment }}</p>
+                <p class="mt-2 text-sm font-bold uppercase text-muted">{{ review.task.title }} · {{ review.created_at|date:"M d, Y" }}</p>
+            </div>
+        {% empty %}
+            <p class="text-sm text-muted">No reviews yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

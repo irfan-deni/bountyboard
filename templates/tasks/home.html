@@ -3,22 +3,23 @@
 {% block title %}Campus Bounties | BountyBoard{% endblock %}
 
 {% block content %}
-<div class="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+<div class="pixel-panel mb-10 flex flex-col justify-between gap-5 p-6 sm:flex-row sm:items-end">
     <div>
-        <h1 class="text-3xl font-normal tracking-tight text-ink">Campus Bounties</h1>
-        <p class="mt-2 text-base leading-relaxed text-muted">Claim tasks. Earn cash. Build your rep.</p>
+        <p class="mb-3 inline-block border-4 border-ink bg-primary px-3 py-1 text-xs font-bold uppercase tracking-widest text-ink">Quest Board</p>
+        <h1 class="font-display text-xl leading-relaxed text-ink">Campus Bounties</h1>
+        <p class="mt-3 text-lg leading-relaxed text-body">Claim tasks. Earn cash. Build your rep.</p>
     </div>
 
-    <div class="flex flex-wrap gap-6">
-        <a href="{% url 'home' %}" class="text-sm font-medium text-ink no-underline border-b-2 pb-1 {% if not selected_category %}border-primary text-primary{% else %}border-transparent text-muted hover:text-ink hover:border-hairline-strong{% endif %}">All</a>
+    <div class="flex flex-wrap gap-3">
+        <a href="{% url 'home' %}" class="border-4 border-ink px-4 py-2 text-sm font-bold uppercase no-underline {% if not selected_category %}bg-primary text-ink{% else %}bg-surface-card text-ink hover:bg-surface-strong{% endif %}">All</a>
         {% for value, label in categories %}
-            <a href="?category={{ value }}" class="text-sm font-medium no-underline border-b-2 pb-1 {% if selected_category == value %}border-primary text-primary{% else %}border-transparent text-muted hover:text-ink hover:border-hairline-strong{% endif %}">{{ label }}</a>
+            <a href="?category={{ value }}" class="border-4 border-ink px-4 py-2 text-sm font-bold uppercase no-underline {% if selected_category == value %}bg-primary text-ink{% else %}bg-surface-card text-ink hover:bg-surface-strong{% endif %}">{{ label }}</a>
         {% endfor %}
     </div>
 </div>
 
 {% if user.is_authenticated %}
-    <p class="mb-8"><a href="{% url 'task_create' %}" class="inline-flex rounded-md bg-primary px-6 py-3 text-sm font-medium text-on-primary no-underline hover:bg-primary-active">+ Post a Bounty</a></p>
+    <p class="mb-8"><a href="{% url 'task_create' %}" class="pixel-button">+ Post Quest</a></p>
 {% endif %}
 
 {% if open_tasks %}
@@ -28,10 +29,10 @@
         {% endfor %}
     </div>
 {% else %}
-    <section class="rounded-lg bg-surface-card border border-hairline p-12 text-center">
-        <h2 class="text-xl font-normal tracking-tight text-ink">No open bounties yet</h2>
-        <p class="mt-2 text-sm text-muted">Be the first poster to add a campus task.</p>
-        <a href="{% url 'task_create' %}" class="mt-6 inline-flex rounded-md bg-primary px-6 py-3 text-sm font-medium text-on-primary no-underline hover:bg-primary-active">+ Post Bounty</a>
+    <section class="pixel-panel p-12 text-center">
+        <h2 class="font-display text-sm leading-relaxed text-ink">No quests yet</h2>
+        <p class="mt-4 text-lg text-body">Be the first student to add a campus bounty.</p>
+        <a href="{% url 'task_create' %}" class="pixel-button mt-6">+ Post Quest</a>
     </section>
 {% endif %}
 {% endblock %}
