@@ -5,20 +5,20 @@
 {% block content %}
 <div class="mb-10 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
     <div>
-        <h1 class="text-3xl font-semibold tracking-tight text-ink">Campus Bounties</h1>
-        <p class="mt-2 text-base leading-relaxed text-ink-muted-80">Claim tasks. Earn cash. Build your rep.</p>
+        <h1 class="text-3xl font-normal tracking-tight text-ink">Campus Bounties</h1>
+        <p class="mt-2 text-base leading-relaxed text-muted">Claim tasks. Earn cash. Build your rep.</p>
     </div>
 
     <div class="flex flex-wrap gap-6">
-        <a href="{% url 'home' %}" class="text-sm font-medium text-ink no-underline border-b-2 pb-1 {% if not selected_category %}border-primary text-primary{% else %}border-transparent text-ink-muted-48 hover:text-ink hover:border-hairline{% endif %}">All</a>
+        <a href="{% url 'home' %}" class="text-sm font-medium text-ink no-underline border-b-2 pb-1 {% if not selected_category %}border-primary text-primary{% else %}border-transparent text-muted hover:text-ink hover:border-hairline-strong{% endif %}">All</a>
         {% for value, label in categories %}
-            <a href="?category={{ value }}" class="text-sm font-medium no-underline border-b-2 pb-1 {% if selected_category == value %}border-primary text-primary{% else %}border-transparent text-ink-muted-48 hover:text-ink hover:border-hairline{% endif %}">{{ label }}</a>
+            <a href="?category={{ value }}" class="text-sm font-medium no-underline border-b-2 pb-1 {% if selected_category == value %}border-primary text-primary{% else %}border-transparent text-muted hover:text-ink hover:border-hairline-strong{% endif %}">{{ label }}</a>
         {% endfor %}
     </div>
 </div>
 
 {% if user.is_authenticated %}
-    <p class="mb-8"><a href="{% url 'task_create' %}" class="inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-on-primary no-underline hover:bg-primary-focus">+ Post a Bounty</a></p>
+    <p class="mb-8"><a href="{% url 'task_create' %}" class="inline-flex rounded-md bg-primary px-6 py-3 text-sm font-medium text-on-primary no-underline hover:bg-primary-active">+ Post a Bounty</a></p>
 {% endif %}
 
 {% if open_tasks %}
@@ -28,10 +28,10 @@
         {% endfor %}
     </div>
 {% else %}
-    <section class="rounded-lg bg-canvas-parchment p-12 text-center">
-        <h2 class="text-xl font-semibold text-ink">No open bounties yet</h2>
-        <p class="mt-2 text-sm text-ink-muted-48">Be the first poster to add a campus task.</p>
-        <a href="{% url 'task_create' %}" class="mt-6 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-on-primary no-underline hover:bg-primary-focus">+ Post Bounty</a>
+    <section class="rounded-lg bg-surface-card border border-hairline p-12 text-center">
+        <h2 class="text-xl font-normal tracking-tight text-ink">No open bounties yet</h2>
+        <p class="mt-2 text-sm text-muted">Be the first poster to add a campus task.</p>
+        <a href="{% url 'task_create' %}" class="mt-6 inline-flex rounded-md bg-primary px-6 py-3 text-sm font-medium text-on-primary no-underline hover:bg-primary-active">+ Post Bounty</a>
     </section>
 {% endif %}
 {% endblock %}

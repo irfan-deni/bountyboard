@@ -8,20 +8,20 @@
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
 <body class="bg-canvas text-ink font-sans antialiased">
-    <header class="bg-surface-black text-on-dark">
-        <div class="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
-            <a href="{% url 'home' %}" class="no-underline text-on-dark font-bold text-lg tracking-tight">BountyBoard</a>
-            <nav class="flex items-center gap-5 text-sm tracking-tight">
+    <header class="bg-canvas border-b border-hairline">
+        <div class="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
+            <a href="{% url 'home' %}" class="no-underline text-ink font-semibold text-lg tracking-tight">BountyBoard</a>
+            <nav class="flex items-center gap-6 text-sm font-medium">
                 {% if user.is_authenticated %}
-                    <span class="text-body-muted">Hi, {{ user.username }}</span>
-                    <a href="{% url 'task_create' %}" class="text-on-dark no-underline hover:text-body-muted">Post a Bounty</a>
+                    <span class="text-muted">Hi, {{ user.username }}</span>
+                    <a href="{% url 'task_create' %}" class="text-ink no-underline hover:text-primary">Post a Bounty</a>
                     <form method="post" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}
-                        <button type="submit" class="text-on-dark hover:text-body-muted bg-transparent border-none cursor-pointer text-sm tracking-tight">Log Out</button>
+                        <button type="submit" class="text-ink hover:text-primary bg-transparent border-none cursor-pointer text-sm font-medium">Log Out</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'login' %}" class="text-on-dark no-underline hover:text-body-muted">Log In</a>
-                    <a href="{% url 'register' %}" class="text-on-dark no-underline hover:text-body-muted">Register</a>
+                    <a href="{% url 'login' %}" class="text-ink no-underline hover:text-primary">Log In</a>
+                    <a href="{% url 'register' %}" class="text-ink no-underline hover:text-primary">Register</a>
                 {% endif %}
             </nav>
         </div>
@@ -30,7 +30,7 @@
     <main class="max-w-5xl mx-auto px-5 py-12">
         {% if messages %}
             {% for message in messages %}
-                <div class="bg-canvas-parchment text-ink px-5 py-3 mb-6 text-sm font-medium">
+                <div class="border border-hairline bg-surface-card text-ink px-5 py-3 mb-6 text-sm font-medium">
                     {{ message }}
                 </div>
             {% endfor %}

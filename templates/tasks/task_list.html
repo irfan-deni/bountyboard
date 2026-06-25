@@ -3,22 +3,22 @@
 {% block title %}Browse Bounties | BountyBoard{% endblock %}
 
 {% block content %}
-<div class="mb-8 rounded-lg bg-canvas-parchment p-6">
+<div class="mb-8 rounded-lg border border-hairline bg-surface-card p-6">
     <div class="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-ink">Browse Bounties</h1>
-            <p class="mt-1 text-sm text-ink-muted-48">Search by task, category, or campus errand.</p>
+            <h1 class="text-2xl font-normal tracking-tight text-ink">Browse Bounties</h1>
+            <p class="mt-1 text-sm text-muted">Search by task, category, or campus errand.</p>
         </div>
     </div>
     <form class="grid gap-3 md:grid-cols-[1fr_200px_auto]" method="get">
-        <input class="rounded-full border border-hairline bg-canvas px-5 py-3 text-sm text-ink focus:border-primary focus:outline-none" type="search" name="q" value="{{ query }}" placeholder="Search printing, Python, cafe delivery...">
-        <select class="rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none" name="category">
+        <input class="rounded-md border border-hairline bg-surface-card px-5 py-3 text-sm text-ink focus:border-primary focus:outline-none" type="search" name="q" value="{{ query }}" placeholder="Search printing, Python, cafe delivery...">
+        <select class="rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none" name="category">
             <option value="">All categories</option>
             {% for value, label in categories %}
                 <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
-        <button class="rounded-full bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-focus cursor-pointer" type="submit">Filter</button>
+        <button class="rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Filter</button>
     </form>
 </div>
 
@@ -29,9 +29,9 @@
         {% endfor %}
     </div>
 {% else %}
-    <section class="rounded-lg bg-canvas-parchment p-12 text-center">
-        <h2 class="text-xl font-semibold text-ink">No matching bounties</h2>
-        <p class="mt-2 text-sm text-ink-muted-48">Try a different search or category.</p>
+    <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center">
+        <h2 class="text-xl font-normal tracking-tight text-ink">No matching bounties</h2>
+        <p class="mt-2 text-sm text-muted">Try a different search or category.</p>
     </section>
 {% endif %}
 {% endblock %}
