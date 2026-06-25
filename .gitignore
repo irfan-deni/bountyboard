@@ -46,5 +46,11 @@ dist/
 .DS_Store
 Thumbs.db
 
-# Claude Code local state (never commit)
+# Node / Tailwind
+node_modules/
+static/css/output.css
+
+# Claude Code & opencode local state
 .claude/
+.opencode/
+

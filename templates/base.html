@@ -1,62 +1,39 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}BountyBoard{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: '#4f46e5',
-                        bounty: '#10b981',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
-<body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-800 antialiased">
-    <nav class="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
-        <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-            <a href="{% url 'home' %}" class="flex items-center gap-2">
-                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-sm font-black text-white">BB</span>
-                <span class="text-xl font-bold tracking-tight text-white">BountyBoard</span>
-            </a>
-
+<body class="bg-stone-100 text-stone-900 font-sans antialiased">
+    <header class="bg-stone-900 text-white text-center px-6 py-10">
+        <a href="{% url 'home' %}" class="no-underline text-white"><h1 class="text-3xl font-bold m-0">BountyBoard</h1></a>
+        <p class="text-stone-400 mt-1 text-sm">Campus micro-jobs for posters and hunters.</p>
+        <nav class="mt-3 flex items-center justify-center gap-4 text-sm">
             {% if user.is_authenticated %}
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="hidden items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-sm sm:flex">
-                        <span class="font-semibold text-slate-200">{{ user.profile.get_rank_display|default:"Novice" }}</span>
-                        <span class="font-bold text-brand">{{ user.profile.xp|default:"0" }} XP</span>
-                    </div>
-                    <a href="{% url 'task_create' %}" class="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-950 transition-colors hover:bg-slate-200">+ Post Bounty</a>
-                    <a href="#" class="flex h-8 w-8 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">{{ user.username|make_list|first|upper }}</a>
-                    <form method="post" action="{% url 'logout' %}" class="hidden sm:block">
-                        {% csrf_token %}
-                        <button type="submit" class="text-sm font-medium text-slate-300 hover:text-white">Logout</button>
-                    </form>
-                </div>
+                <span class="text-stone-500">Hi, {{ user.username }}</span>
+                <a href="{% url 'task_create' %}" class="text-emerald-600 font-semibold hover:text-emerald-400">Post a Bounty</a>
+                <form method="post" action="{% url 'logout' %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="text-emerald-600 font-semibold hover:text-emerald-400 bg-transparent border-none cursor-pointer text-sm">Log Out</button>
+                </form>
             {% else %}
-                <div class="flex items-center gap-3">
-                    <a href="{% url 'login' %}" class="text-sm font-medium text-slate-300 hover:text-white">Log in</a>
-                    <a href="{% url 'login' %}" class="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700">Sign up</a>
-                </div>
+                <a href="{% url 'login' %}" class="text-emerald-600 font-semibold hover:text-emerald-400">Log In</a>
+                <a href="{% url 'register' %}" class="text-emerald-600 font-semibold hover:text-emerald-400">Register</a>
             {% endif %}
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    {% if messages %}
-        <section class="mx-auto mt-4 w-full max-w-6xl px-4">
+    <main class="max-w-5xl mx-auto px-5 py-8">
+        {% if messages %}
             {% for message in messages %}
-                <div class="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm font-medium text-indigo-900">{{ message }}</div>
+                <div class="{% if message.tags == 'success' %}bg-emerald-100 text-emerald-800{% else %}bg-red-100 text-red-800{% endif %} rounded-xl px-5 py-3 mb-4 font-semibold">
+                    {{ message }}
+                </div>
             {% endfor %}
-        </section>
-    {% endif %}
-
-    <main class="mx-auto w-full max-w-6xl flex-grow px-4 py-8">
+        {% endif %}
         {% block content %}{% endblock %}
     </main>
 </body>

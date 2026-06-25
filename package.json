@@ -1,0 +1,26 @@
+{
+  "name": "bountyboard",
+  "version": "1.0.0",
+  "description": "BountyBoard is a campus-based student task marketplace built with Django. Students can post small paid tasks, hunters can claim or bid on jobs, and both sides build trust through ratings, XP, badges, and rankings.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx @tailwindcss/cli -i static/src/input.css -o static/css/output.css",
+    "watch": "npx @tailwindcss/cli -i static/src/input.css -o static/css/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irfan-deni/bountyboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/irfan-deni/bountyboard/issues"
+  },
+  "homepage": "https://github.com/irfan-deni/bountyboard#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.1",
+    "tailwindcss": "^4.3.1"
+  }
+}

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Task(models.Model):
     CATEGORY_CHOICES = [
         ('delivery', 'Delivery'),
@@ -26,25 +27,14 @@ class Task(models.Model):
     bounty = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='open')
     deadline = models.DateTimeField()
-    proof_image = models.ImageField(upload_to='proofs/', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} - RM{self.bounty}"
 
 
-class Bid(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='bids')
-    hunter = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Bid by {self.hunter.username} on {self.task.title}"
-
-
 class Review(models.Model):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='reviews')
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='given_reviews')
     reviewee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_reviews')
     rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])

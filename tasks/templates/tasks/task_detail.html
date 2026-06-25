@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ task.title }} — BountyBoard{% endblock %}
+
+{% block content %}
+<article class="bg-white rounded-2xl p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+    <div class="flex gap-2 items-center mb-3">
+        <span class="inline-block rounded-full px-3 py-0.5 text-xs font-semibold
+            {% if task.status == 'open' %}bg-emerald-100 text-emerald-800
+            {% elif task.status == 'claimed' %}bg-blue-100 text-blue-800
+            {% elif task.status == 'completed' %}bg-indigo-100 text-indigo-800
+            {% else %}bg-stone-200 text-stone-700{% endif %}">
+            {{ task.get_status_display }}
+        </span>
+        <span class="inline-block bg-stone-200 rounded-full px-3 py-0.5 text-xs font-semibold">{{ task.get_category_display }}</span>
+    </div>
+
+    <h2 class="text-2xl font-bold mt-2">{{ task.title }}</h2>
+    <p class="text-stone-700 mt-3">{{ task.description }}</p>
+    <p class="text-emerald-700 font-bold text-3xl mt-3">RM{{ task.bounty }}</p>
+    <p class="text-stone-500 text-sm mt-2">
+        Posted by <strong>{{ task.poster.username }}</strong>
+        &middot; Deadline {{ task.deadline|date:"M d, Y H:i" }}
+        &middot; {{ task.created_at|date:"M d, Y" }}
+    </p>
+
+    {% if task.hunter %}
+        <p class="mt-2 text-stone-600">Claimed by <strong>{{ task.hunter.username }}</strong></p>
+    {% endif %}
+
+    <div class="flex gap-3 mt-4">
+        {% if user.is_authenticated and task.status == 'open' and user != task.poster %}
+            <form method="post" action="{% url 'task_claim' task.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-emerald-800 cursor-pointer">Claim This Bounty</button>
+            </form>
+        {% endif %}
+
+        {% if user == task.poster or user == task.hunter %}
+            {% if task.status == 'claimed' %}
+                <form method="post" action="{% url 'task_complete' task.id %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-blue-700 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-800 cursor-pointer">Mark as Completed</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+</article>
+
+{% if reviews %}
+    <h3 class="text-xl font-bold mt-8 mb-4">Reviews</h3>
+    {% for review in reviews %}
+        <div class="bg-white rounded-2xl p-5 shadow-[0_8px_24px_rgba(0,0,0,0.08)] mb-3">
+            <p class="font-semibold">
+                {{ review.reviewer.username }}
+                <span class="text-stone-400">→</span>
+                {{ review.reviewee.username }}
+                <span class="text-amber-500 ml-2">{{ review.rating }}/5</span>
+            </p>
+            <p class="text-stone-700 mt-1">{{ review.comment }}</p>
+            <p class="text-stone-500 text-xs mt-1">{{ review.created_at|date:"M d, Y" }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

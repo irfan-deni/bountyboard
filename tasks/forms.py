@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Bid, Task
+from .models import Task
 
 
 class TaskForm(forms.ModelForm):
@@ -27,17 +27,5 @@ class TaskForm(forms.ModelForm):
             'deadline': forms.DateTimeInput(attrs={
                 'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
                 'type': 'datetime-local',
-            }),
-        }
-
-
-class BidForm(forms.ModelForm):
-    class Meta:
-        model = Bid
-        fields = ['message']
-        widgets = {
-            'message': forms.Textarea(attrs={
-                'class': 'min-h-28 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
-                'placeholder': 'Tell the poster how you will complete this bounty.',
             }),
         }
