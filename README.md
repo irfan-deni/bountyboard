@@ -111,7 +111,7 @@ source venv/bin/activate
 Install dependencies:
 
 ```bash
-pip install django pillow
+pip install -r requirements.txt
 ```
 
 Run database migrations:
@@ -144,6 +144,40 @@ Open the Django admin at:
 ```text
 http://127.0.0.1:8000/admin/
 ```
+
+## Docker Setup
+
+Build and start the app with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+Open the app at:
+
+```text
+http://localhost:8000/
+```
+
+Open the Django admin at:
+
+```text
+http://localhost:8000/admin/
+```
+
+Create an admin user inside the running container:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+Stop the Docker containers:
+
+```bash
+docker compose down
+```
+
+The Docker setup uses SQLite stored in the `sqlite_data` Docker volume.
 
 ## Development Notes
 
