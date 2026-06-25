@@ -73,7 +73,7 @@ bountyboard/
 ├── core/              # Django project settings and root URLs
 ├── tasks/             # Task, bid, and review models
 ├── users/             # User profile and badge models
-├── skills/            # Project requirements and implementation notes
+├── docs/              # Project documentation
 ├── manage.py
 ├── README.md
 └── .gitignore
