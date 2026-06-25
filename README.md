@@ -117,6 +117,13 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+Install frontend dependencies and build the CSS:
+
+```bash
+npm install
+npm run build
+```
+
 Run database migrations:
 
 ```bash

@@ -48,9 +48,7 @@ Thumbs.db
 
 # Node / Tailwind
 node_modules/
-static/css/output.css
 
 # Claude Code & opencode local state
 .claude/
 .opencode/
-
