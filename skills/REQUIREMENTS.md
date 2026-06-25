@@ -10,9 +10,10 @@ BountyBoard is a campus micro-job marketplace where students post paid tasks and
 
 | Role | Requirements |
 | --- | --- |
-| Poster | Can create tasks, view their posted tasks, approve work, and review hunters |
-| Hunter | Can browse tasks, bid or claim tasks, submit proof, earn XP, and receive reviews |
-| Admin | Can manage users, tasks, categories, reviews, and moderation through Django admin |
+| Student | Can browse bounties, post tasks with RM/MYR bounty amounts, claim tasks, submit proof, and receive reviews |
+| Admin | Can manage users, tasks, reviews, and moderation through Django admin |
+
+Poster and Hunter are task-based labels, not separate account types. A student is the poster for tasks they create and the hunter for tasks they claim.
 
 ## Functional Requirements
 
@@ -21,20 +22,29 @@ BountyBoard is a campus micro-job marketplace where students post paid tasks and
 - Users can register an account.
 - Users can log in and log out.
 - Users have a profile linked to their Django auth user.
-- Each profile has a role: Poster or Hunter.
+- Students use one account and can act as poster or hunter depending on the task.
 
 ### Profiles
 
-- Profiles must show username, role, rank, XP, rating, bio, avatar, and badges.
+- Profiles should show username, XP, rank, rating, bio, avatar, and badges when those features are available.
 - Hunters should show claimed or completed tasks.
 - Posters should show posted tasks.
 - Ratings should help other users judge trustworthiness.
 
 ### Task Posting
 
-- Posters can create a task with title, description, bounty amount, category, and deadline.
+- Logged-in students can create a task with title, description, bounty amount, category, and deadline.
 - Tasks start with an Open status.
-- Posters can view and manage their own tasks.
+- Students can view and manage tasks they created.
+
+### Bounty Amount and Payment
+
+- Task creators must set a bounty amount in RM/MYR.
+- The bounty amount is displayed clearly on task cards and task detail pages.
+- BountyBoard does not process, hold, or transfer money.
+- Payment is handled outside the system between the task creator and the assigned student.
+- Outside payment methods can include cash, bank transfer, TNG eWallet, DuitNow, or any method both students agree on.
+- The platform only tracks the task, claim status, proof, completion, and reviews.
 
 ### Task Browsing
 
@@ -44,24 +54,23 @@ BountyBoard is a campus micro-job marketplace where students post paid tasks and
 
 ### Bidding and Claiming
 
-- Hunters can submit a bid or claim message for an open task.
+- Logged-in students can submit a claim message for open tasks they did not create.
 - A task can store the selected hunter once assigned.
 - Claimed tasks should no longer appear as open for other hunters.
 
 ### Proof Submission
 
-- Hunters can submit proof of completion, such as an uploaded image.
-- Posters can review the proof before approving completion.
+- The assigned student can submit proof of completion, such as an uploaded image.
+- The task creator can review the proof before approving completion.
 - Completed tasks should update the hunter's XP and progress.
 
 ### Reviews
 
-- Posters can review hunters after task completion.
-- Hunters can review posters after task completion if implemented.
+- Students can review each other after task completion.
 - Reviews include a 1 to 5 rating and a written comment.
 - Profile rating should be based on received reviews.
 
-### Gamification
+### Gamification Enhancements
 
 - Hunters earn XP from completed jobs.
 - Hunter ranks should progress from Novice to Apprentice, Expert, and Elite Hunter.
@@ -87,12 +96,12 @@ BountyBoard is a campus micro-job marketplace where students post paid tasks and
 
 ## Suggested Pages
 
-- Home page with open bounties and featured leaderboard
+- Home page with open bounties
 - Search or browse page with filters
 - Task creation page
 - Task detail page
 - Profile page
-- Leaderboard page
+- Leaderboard page for future gamification
 - Login and registration pages
 - Admin panel
 
@@ -107,9 +116,10 @@ BountyBoard is a campus micro-job marketplace where students post paid tasks and
 ## Acceptance Criteria
 
 - A user can register, log in, and view a profile.
-- A poster can create a task with a bounty and deadline.
-- A hunter can browse open tasks and bid or claim one.
+- A student can create a task with a bounty amount in RM/MYR and a deadline.
+- A student can browse open tasks and claim one they did not create.
 - A task can move from Open to Claimed to Completed.
 - A completed task can receive a review.
-- Hunter XP, rank, badges, or leaderboard data can be displayed.
+- The system clearly states that payment is handled outside BountyBoard.
+- Hunter XP, rank, badges, or leaderboard data can be displayed as an enhancement.
 - Admin users can moderate core records through Django admin.

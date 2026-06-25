@@ -2,6 +2,8 @@
 
 BountyBoard is a campus-based student task marketplace built with Django. Students can post small paid tasks, hunters can claim or bid on jobs, and both sides build trust through ratings, XP, badges, and rankings.
 
+Bounty amounts are listed in RM/MYR. BountyBoard does not process payments; students arrange payment outside the system.
+
 ## Project Concept
 
 Posters create bounties with a deadline and cash reward. Hunters browse available tasks, claim or bid on them, complete the work, submit proof, and receive reviews after completion.
@@ -37,6 +39,7 @@ Example bounties:
 - User registration, login, logout, and profile management
 - Poster and Hunter profile roles
 - Task posting with title, description, bounty, category, deadline, and status
+- RM/MYR bounty display with payment handled outside the platform
 - Open task browsing and category filtering
 - Bids or claim messages from hunters
 - Task completion proof uploads
