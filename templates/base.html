@@ -7,29 +7,30 @@
     <title>{% block title %}BountyBoard{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
-<body class="bg-stone-100 text-stone-900 font-sans antialiased">
-    <header class="bg-stone-900 text-white text-center px-6 py-10">
-        <a href="{% url 'home' %}" class="no-underline text-white"><h1 class="text-3xl font-bold m-0">BountyBoard</h1></a>
-        <p class="text-stone-400 mt-1 text-sm">Campus micro-jobs for posters and hunters.</p>
-        <nav class="mt-3 flex items-center justify-center gap-4 text-sm">
-            {% if user.is_authenticated %}
-                <span class="text-stone-500">Hi, {{ user.username }}</span>
-                <a href="{% url 'task_create' %}" class="text-emerald-600 font-semibold hover:text-emerald-400">Post a Bounty</a>
-                <form method="post" action="{% url 'logout' %}" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" class="text-emerald-600 font-semibold hover:text-emerald-400 bg-transparent border-none cursor-pointer text-sm">Log Out</button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}" class="text-emerald-600 font-semibold hover:text-emerald-400">Log In</a>
-                <a href="{% url 'register' %}" class="text-emerald-600 font-semibold hover:text-emerald-400">Register</a>
-            {% endif %}
-        </nav>
+<body class="bg-canvas text-ink font-sans antialiased">
+    <header class="bg-surface-black text-on-dark">
+        <div class="max-w-5xl mx-auto px-5 h-11 flex items-center justify-between">
+            <a href="{% url 'home' %}" class="no-underline text-on-dark font-semibold text-sm tracking-tight">BountyBoard</a>
+            <nav class="flex items-center gap-4 text-xs tracking-tight">
+                {% if user.is_authenticated %}
+                    <span class="text-body-muted">Hi, {{ user.username }}</span>
+                    <a href="{% url 'task_create' %}" class="text-on-dark no-underline hover:text-body-muted">Post a Bounty</a>
+                    <form method="post" action="{% url 'logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="text-on-dark hover:text-body-muted bg-transparent border-none cursor-pointer text-xs tracking-tight">Log Out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-on-dark no-underline hover:text-body-muted">Log In</a>
+                    <a href="{% url 'register' %}" class="text-on-dark no-underline hover:text-body-muted">Register</a>
+                {% endif %}
+            </nav>
+        </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-5 py-8">
+    <main class="max-w-5xl mx-auto px-5 py-12">
         {% if messages %}
             {% for message in messages %}
-                <div class="{% if message.tags == 'success' %}bg-emerald-100 text-emerald-800{% else %}bg-red-100 text-red-800{% endif %} rounded-xl px-5 py-3 mb-4 font-semibold">
+                <div class="bg-canvas-parchment text-ink px-5 py-3 mb-6 text-sm font-medium">
                     {{ message }}
                 </div>
             {% endfor %}

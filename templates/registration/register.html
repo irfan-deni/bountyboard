@@ -1,36 +1,36 @@
 {% extends 'base.html' %}
 
-{% block title %}Register — BountyBoard{% endblock %}
+{% block title %}Register | BountyBoard{% endblock %}
 
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Register</h2>
+<h2 class="text-2xl font-semibold tracking-tight text-ink mb-5">Register</h2>
 
-<div class="bg-white rounded-2xl p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)] max-w-sm">
+<div class="rounded-lg border border-hairline bg-canvas p-8 max-w-sm">
     <form method="post">
         {% csrf_token %}
 
-        <div class="mb-4">
-            <label for="id_username" class="block font-semibold text-sm mb-1.5">Username</label>
+        <div class="mb-5">
+            <label for="id_username" class="block font-semibold text-sm mb-2 text-ink">Username</label>
             <input type="text" name="username" id="id_username" maxlength="150" required
-                   class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-            <p class="text-stone-500 text-xs mt-1">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                   class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
+            <p class="text-ink-muted-48 text-xs mt-1">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
         </div>
 
-        <div class="mb-4">
-            <label for="id_password1" class="block font-semibold text-sm mb-1.5">Password</label>
+        <div class="mb-5">
+            <label for="id_password1" class="block font-semibold text-sm mb-2 text-ink">Password</label>
             <input type="password" name="password1" id="id_password1" required
-                   class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
-            <p class="text-stone-500 text-xs mt-1">Your password can't be too similar to your other personal information. It must contain at least 8 characters and can't be entirely numeric.</p>
+                   class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
+            <p class="text-ink-muted-48 text-xs mt-1">Your password can't be too similar to your other personal information. It must contain at least 8 characters and can't be entirely numeric.</p>
         </div>
 
-        <div class="mb-4">
-            <label for="id_password2" class="block font-semibold text-sm mb-1.5">Confirm password</label>
+        <div class="mb-5">
+            <label for="id_password2" class="block font-semibold text-sm mb-2 text-ink">Confirm password</label>
             <input type="password" name="password2" id="id_password2" required
-                   class="w-full rounded-xl border border-stone-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                   class="w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
         </div>
 
         {% if form.errors %}
-            <div class="text-red-600 text-sm mb-3">
+            <div class="text-red-600 text-sm mb-4 font-medium">
                 {% for field, errors in form.errors.items %}
                     {% for error in errors %}
                         <p>{{ error }}</p>
@@ -39,7 +39,7 @@
             </div>
         {% endif %}
 
-        <button type="submit" class="w-full bg-emerald-700 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-emerald-800 cursor-pointer">Register</button>
+        <button type="submit" class="w-full rounded-full bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-focus cursor-pointer">Register</button>
     </form>
 </div>
 {% endblock %}
