@@ -14,8 +14,9 @@ class Task(models.Model):
     ]
     STATUS_CHOICES = [
         ('open', 'Open'),
-        ('claimed', 'Claimed'),
+        ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
+        ('done', 'Done'),
         ('closed', 'Closed'),
     ]
 
@@ -25,12 +26,43 @@ class Task(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     bounty = models.DecimalField(max_digits=8, decimal_places=2)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='open')
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default='open')
     deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} - RM{self.bounty}"
+
+
+class Claim(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='claims')
+    hunter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='claims')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('task', 'hunter')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.hunter.username} → {self.task.title} ({self.status})"
+
+
+class Proof(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='proofs')
+    hunter = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='proofs/')
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Proof for {self.task.title} by {self.hunter.username}"
 
 
 class Review(models.Model):

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Task
+from .models import Proof, Task
 
 
 class TaskForm(forms.ModelForm):
@@ -27,5 +27,21 @@ class TaskForm(forms.ModelForm):
             'deadline': forms.DateTimeInput(attrs={
                 'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
                 'type': 'datetime-local',
+            }),
+        }
+
+
+class ProofForm(forms.ModelForm):
+    class Meta:
+        model = Proof
+        fields = ['image', 'description']
+        widgets = {
+            'image': forms.ClearableFileInput(attrs={
+                'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'min-h-24 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'placeholder': 'Optional description of the completed work.',
+                'rows': 3,
             }),
         }

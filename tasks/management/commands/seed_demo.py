@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from tasks.models import Review, Task
+from tasks.models import Claim, Review, Task
 from users.models import Profile
 
 
@@ -162,12 +162,12 @@ class Command(BaseCommand):
             if index == 0:
                 status = "completed"
             elif index == 1:
-                status = "claimed"
+                status = "in_progress"
             else:
                 status = "open"
 
             hunter = None
-            if status in ("claimed", "completed"):
+            if status in ("in_progress", "completed"):
                 for candidate_username in usernames:
                     candidate = users[candidate_username]
                     if candidate != poster:
@@ -187,6 +187,26 @@ class Command(BaseCommand):
                 },
             )
             tasks.append(task)
+
+        # ----------------------------------------------------------- claims
+        # Create a pending Claim for the in_progress task + a rejected one.
+        in_progress_task = tasks[1]
+        if in_progress_task.hunter is not None:
+            Claim.objects.get_or_create(
+                task=in_progress_task,
+                hunter=in_progress_task.hunter,
+                defaults={"status": "accepted"},
+            )
+        # Also add a pending claim from another user to demo the queue.
+        for username in usernames:
+            candidate = users[username]
+            if candidate != in_progress_task.poster and candidate != in_progress_task.hunter:
+                Claim.objects.get_or_create(
+                    task=in_progress_task,
+                    hunter=candidate,
+                    defaults={"status": "pending"},
+                )
+                break
 
         # ----------------------------------------------------------- reviews
         # One review left by the poster for the hunter on the completed task.
@@ -208,14 +228,16 @@ class Command(BaseCommand):
             self.style.SUCCESS(
                 "Demo data seeded (idempotent). "
                 "Users: {users} | Profiles: {profiles} | Tasks: {tasks} "
-                "(open={open}, claimed={claimed}, completed={completed}) | "
-                "Reviews: {reviews} | Demo password: '{password}'".format(
+                "(open={open}, in_progress={in_progress}, completed={completed}) | "
+                "Claims: {claims} | Reviews: {reviews} | "
+                "Demo password: '{password}'".format(
                     users=User.objects.filter(is_superuser=False).count(),
                     profiles=Profile.objects.count(),
                     tasks=Task.objects.count(),
                     open=Task.objects.filter(status="open").count(),
-                    claimed=Task.objects.filter(status="claimed").count(),
+                    in_progress=Task.objects.filter(status="in_progress").count(),
                     completed=Task.objects.filter(status="completed").count(),
+                    claims=Claim.objects.count(),
                     reviews=Review.objects.count(),
                     password=DEMO_PASSWORD,
                 )
