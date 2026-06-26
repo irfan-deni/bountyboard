@@ -52,3 +52,6 @@ node_modules/
 # Claude Code & opencode local state
 .claude/
 .opencode/
+
+# Superpowers mardkown editor
+docs/superpowers/
