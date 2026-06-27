@@ -12,4 +12,7 @@ urlpatterns = [
     path('tasks/<int:task_id>/proof/', views.submit_proof, name='submit_proof'),
     path('tasks/<int:task_id>/approve/', views.approve_completion, name='approve_completion'),
     path('tasks/<int:task_id>/confirm-payment/', views.confirm_payment, name='confirm_payment'),
+    path('browse/', views.browse, name='browse'),
+    path('my-tasks/', views.my_tasks, name='my_tasks'),
+    path('tasks/<int:task_id>/review/', views.review_create, name='review_create'),
 ]

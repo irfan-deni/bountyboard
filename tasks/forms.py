@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Proof, Task
+from .models import Proof, Task, Review
 
 
 class TaskForm(forms.ModelForm):
@@ -43,5 +43,21 @@ class ProofForm(forms.ModelForm):
                 'class': 'min-h-24 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
                 'placeholder': 'Optional description of the completed work.',
                 'rows': 3,
+            }),
+        }
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']
+        widgets = {
+            'rating': forms.Select(attrs={
+                'class': 'w-full rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none',
+            }),
+            'comment': forms.Textarea(attrs={
+                'class': 'w-full rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none',
+                'rows': 3,
+                'placeholder': 'Share how it went...',
             }),
         }

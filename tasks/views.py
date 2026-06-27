@@ -1,8 +1,12 @@
+from decimal import Decimal, InvalidOperation
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.dateparse import parse_date
 
-from .forms import ProofForm, TaskForm
+from .forms import ProofForm, TaskForm, ReviewForm
 from .models import Claim, Proof, Review, Task
 
 
@@ -59,6 +63,14 @@ def task_detail(request, task_id):
         if task.poster == request.user:
             proofs = task.proofs.select_related('hunter').all()
 
+    my_review = None
+    can_review = False
+    if (request.user.is_authenticated and task.status in ('completed', 'done')
+            and task.hunter is not None and request.user in (task.poster, task.hunter)):
+        my_review = Review.objects.filter(task=task, reviewer=request.user).first()
+        can_review = my_review is None
+    review_form = ReviewForm() if can_review else None
+
     return render(request, 'tasks/task_detail.html', {
         'task': task,
         'reviews': reviews,
@@ -66,6 +78,9 @@ def task_detail(request, task_id):
         'claims': claims,
         'proof_form': proof_form,
         'proofs': proofs,
+        'review_form': review_form,
+        'can_review': can_review,
+        'my_review': my_review,
     })
 
 
@@ -191,3 +206,81 @@ def confirm_payment(request, task_id):
     task.save(update_fields=['status'])
     messages.success(request, 'Payment confirmed! Bounty complete.')
     return redirect('task_detail', task_id=task.id)
+
+
+@login_required
+def review_create(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method != 'POST':
+        return redirect('task_detail', task_id=task.id)
+    if task.status not in ('completed', 'done'):
+        messages.error(request, 'You can only review a completed bounty.')
+        return redirect('task_detail', task_id=task.id)
+    if task.hunter is None or request.user not in (task.poster, task.hunter):
+        messages.error(request, 'Only the poster or hunter can leave a review.')
+        return redirect('task_detail', task_id=task.id)
+    if Review.objects.filter(task=task, reviewer=request.user).exists():
+        messages.error(request, 'You already reviewed this bounty.')
+        return redirect('task_detail', task_id=task.id)
+    reviewee = task.hunter if request.user == task.poster else task.poster
+    form = ReviewForm(request.POST)
+    if form.is_valid():
+        review = form.save(commit=False)
+        review.task = task
+        review.reviewer = request.user
+        review.reviewee = reviewee
+        review.save()
+        messages.success(request, 'Review submitted. Thanks for the feedback!')
+    else:
+        messages.error(request, 'Please provide a valid rating and comment.')
+    return redirect('task_detail', task_id=task.id)
+
+
+def browse(request):
+    query = request.GET.get('q', '').strip()
+    selected_category = request.GET.get('category', '').strip()
+    min_bounty = request.GET.get('min_bounty', '').strip()
+    max_bounty = request.GET.get('max_bounty', '').strip()
+    deadline_before = request.GET.get('deadline_before', '').strip()
+
+    tasks = Task.objects.filter(status='open').order_by('deadline')
+    if query:
+        tasks = tasks.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    if selected_category:
+        tasks = tasks.filter(category=selected_category)
+    if min_bounty:
+        try:
+            tasks = tasks.filter(bounty__gte=Decimal(min_bounty))
+        except (InvalidOperation, ValueError):
+            pass
+    if max_bounty:
+        try:
+            tasks = tasks.filter(bounty__lte=Decimal(max_bounty))
+        except (InvalidOperation, ValueError):
+            pass
+    if deadline_before:
+        parsed = parse_date(deadline_before)
+        if parsed:
+            tasks = tasks.filter(deadline__date__lte=parsed)
+
+    return render(request, 'tasks/task_list.html', {
+        'tasks': tasks,
+        'categories': Task.CATEGORY_CHOICES,
+        'selected_category': selected_category,
+        'query': query,
+        'min_bounty': min_bounty,
+        'max_bounty': max_bounty,
+        'deadline_before': deadline_before,
+    })
+
+
+@login_required
+def my_tasks(request):
+    posted_tasks = request.user.posted_tasks.all().order_by('-created_at')
+    assigned_tasks = request.user.claimed_tasks.all().order_by('-created_at')
+    pending_claims = Claim.objects.filter(hunter=request.user, status='pending').select_related('task').order_by('-created_at')
+    return render(request, 'tasks/my_tasks.html', {
+        'posted_tasks': posted_tasks,
+        'assigned_tasks': assigned_tasks,
+        'pending_claims': pending_claims,
+    })

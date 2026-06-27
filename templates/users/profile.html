@@ -15,6 +15,11 @@
 
             <div>
                 <h1 class="text-3xl font-normal tracking-tight text-ink">{{ profile_user.username }}</h1>
+                {% if review_count %}
+                    <p class="mt-2 text-sm font-medium text-ink">★ {{ avg_rating|floatformat:1 }} <span class="text-muted">({{ review_count }} review{{ review_count|pluralize }})</span></p>
+                {% else %}
+                    <p class="mt-2 text-sm text-muted">No reviews yet</p>
+                {% endif %}
                 {% if profile.phone %}
                     <p class="mt-2 text-sm font-medium text-muted">{{ profile.phone }}</p>
                 {% endif %}
@@ -70,6 +75,41 @@
         <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center">
             <p class="text-sm text-muted">No claimed or completed tasks yet.</p>
         </section>
+    {% endif %}
+</section>
+
+{% if is_own_profile %}
+<section class="mt-10">
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Pending claims</h2>
+    {% if pending_claims %}
+        <div class="space-y-3">
+            {% for claim in pending_claims %}
+                <a href="{% url 'task_detail' claim.task.id %}" class="flex items-center justify-between rounded-lg border border-hairline bg-surface-card p-5 no-underline hover:border-hairline-strong">
+                    <span class="text-sm font-semibold text-ink">{{ claim.task.title }}</span>
+                    <span class="text-xs uppercase tracking-widest text-muted">{{ claim.status }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center"><p class="text-sm text-muted">No pending claims.</p></section>
+    {% endif %}
+</section>
+{% endif %}
+
+<section class="mt-10">
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Reviews received</h2>
+    {% if received_reviews %}
+        <div class="space-y-3">
+            {% for review in received_reviews %}
+                <div class="rounded-lg border border-hairline bg-surface-card p-6">
+                    <p class="text-sm font-medium text-ink"><a href="{% url 'user_profile' username=review.reviewer.username %}" class="text-ink no-underline hover:text-primary">@{{ review.reviewer.username }}</a> <span class="ml-2 text-ink">{{ review.rating }}/5</span></p>
+                    <p class="mt-1 text-sm leading-relaxed text-body">{{ review.comment }}</p>
+                    <p class="mt-2 text-xs text-muted">{{ review.created_at|date:"M d, Y" }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center"><p class="text-sm text-muted">No reviews yet.</p></section>
     {% endif %}
 </section>
 {% endblock %}

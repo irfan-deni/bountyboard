@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}My Tasks | BountyBoard{% endblock %}
+{% block content %}
+<h1 class="mb-8 text-3xl font-normal tracking-tight text-ink">My Tasks</h1>
+
+<section class="mb-10">
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Posted by me</h2>
+    {% if posted_tasks %}
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {% for task in posted_tasks %}{% include 'tasks/_task_card.html' %}{% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center"><p class="text-sm text-muted">You haven't posted any bounties yet.</p></section>
+    {% endif %}
+</section>
+
+<section class="mb-10">
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Assigned to me</h2>
+    {% if assigned_tasks %}
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {% for task in assigned_tasks %}{% include 'tasks/_task_card.html' %}{% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center"><p class="text-sm text-muted">No bounties assigned to you yet.</p></section>
+    {% endif %}
+</section>
+
+<section>
+    <h2 class="mb-5 text-xl font-normal tracking-tight text-ink">Pending claims</h2>
+    {% if pending_claims %}
+        <div class="space-y-3">
+            {% for claim in pending_claims %}
+                <a href="{% url 'task_detail' claim.task.id %}" class="flex items-center justify-between rounded-lg border border-hairline bg-surface-card p-5 no-underline hover:border-hairline-strong">
+                    <span class="text-sm font-semibold text-ink">{{ claim.task.title }}</span>
+                    <span class="text-xs uppercase tracking-widest text-muted">{{ claim.status }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center"><p class="text-sm text-muted">No pending claims.</p></section>
+    {% endif %}
+</section>
+{% endblock %}
