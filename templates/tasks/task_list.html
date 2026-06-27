@@ -3,28 +3,28 @@
 {% block title %}Browse Bounties | BountyBoard{% endblock %}
 
 {% block content %}
-<div class="mb-8 rounded-lg border border-hairline bg-surface-card p-6">
+<div class="mb-8 pixel-panel p-6">
     <div class="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-            <h1 class="text-2xl font-normal tracking-tight text-ink">Browse Bounties</h1>
+            <h1 class="font-display text-xl font-normal text-ink">Browse Bounties</h1>
             <p class="mt-1 text-sm text-muted">Search by task, category, or campus errand.</p>
         </div>
     </div>
     <form class="space-y-3" method="get">
         <div class="grid gap-3 md:grid-cols-[1fr_auto]">
-            <input class="rounded-md border border-hairline bg-surface-card px-5 py-3 text-sm text-ink focus:border-primary focus:outline-none" type="search" name="q" value="{{ query }}" placeholder="Search printing, Python, cafe delivery...">
-            <button class="rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Filter</button>
+            <input class="pixel-input" type="search" name="q" value="{{ query }}" placeholder="Search printing, Python, cafe delivery...">
+            <button class="pixel-button" type="submit">Filter</button>
         </div>
         <div class="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            <select class="rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none" name="category">
+            <select class="pixel-input" name="category">
                 <option value="">All categories</option>
                 {% for value, label in categories %}
                     <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
             </select>
-            <input type="number" name="min_bounty" value="{{ min_bounty }}" min="0" step="0.50" placeholder="Min RM" class="rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
-            <input type="number" name="max_bounty" value="{{ max_bounty }}" min="0" step="0.50" placeholder="Max RM" class="rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
-            <input type="date" name="deadline_before" value="{{ deadline_before }}" class="rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none">
+            <input type="number" name="min_bounty" value="{{ min_bounty }}" min="0" step="0.50" placeholder="Min RM" class="pixel-input">
+            <input type="number" name="max_bounty" value="{{ max_bounty }}" min="0" step="0.50" placeholder="Max RM" class="pixel-input">
+            <input type="date" name="deadline_before" value="{{ deadline_before }}" class="pixel-input">
         </div>
     </form>
 </div>
@@ -36,7 +36,7 @@
         {% endfor %}
     </div>
 {% else %}
-    <section class="rounded-lg border border-hairline bg-surface-card p-12 text-center">
+    <section class="pixel-panel p-12 text-center">
         <h2 class="text-xl font-normal tracking-tight text-ink">No matching bounties</h2>
         <p class="mt-2 text-sm text-muted">Try a different search or category.</p>
     </section>

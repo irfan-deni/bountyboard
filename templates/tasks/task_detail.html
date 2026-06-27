@@ -4,9 +4,9 @@
 
 {% block content %}
 <section class="grid gap-6 lg:grid-cols-[1fr_360px]">
-    <article class="rounded-lg border border-hairline bg-surface-card p-8">
+    <article class="pixel-panel p-8">
         <div class="mb-5 flex items-start justify-between gap-4">
-            <span class="bg-surface-strong text-ink px-2.5 py-1 text-xs font-semibold uppercase tracking-widest">{{ task.get_category_display }}</span>
+            <span class="pixel-tag">{{ task.get_category_display }}</span>
             <span class="text-2xl font-semibold text-ink">RM {{ task.bounty }}</span>
         </div>
         <h1 class="text-3xl font-normal leading-tight tracking-tight text-ink">{{ task.title }}</h1>
@@ -17,7 +17,7 @@
             <span>&middot;</span>
             <span>By <a href="{% url 'user_profile' username=task.poster.username %}" class="text-muted no-underline hover:text-primary">@{{ task.poster.username }}</a></span>
         </div>
-        <p class="mt-6 rounded-md bg-canvas-soft px-5 py-4 text-sm font-medium text-ink">Payment is arranged outside BountyBoard. The app only tracks the bounty, claim, proof, completion, and review.</p>
+        <p class="mt-6 border-4 border-ink bg-canvas-soft px-5 py-4 text-sm font-bold text-ink">Payment is arranged outside BountyBoard. The app only tracks the bounty, claim, proof, completion, and review.</p>
         <p class="mt-8 whitespace-pre-line leading-relaxed text-body">{{ task.description }}</p>
     </article>
 
@@ -25,33 +25,33 @@
         {# --- OPEN: Show claim button or pending claimants --- #}
         {% if task.status == 'open' %}
             {% if user.is_authenticated and user != task.poster %}
-                <div class="rounded-lg border border-hairline bg-surface-card p-6">
+                <div class="pixel-panel p-6">
                     <h2 class="text-lg font-semibold text-ink">Claim this bounty</h2>
                     {% if has_claimed %}
                         <p class="mt-4 text-sm text-muted">You already claimed this bounty. Waiting for the poster to review.</p>
                     {% else %}
                         <form class="mt-4" method="post" action="{% url 'claim_task' task.id %}">
                             {% csrf_token %}
-                            <button class="w-full rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Claim Bounty</button>
+                            <button class="pixel-button w-full" type="submit">Claim Bounty</button>
                         </form>
                     {% endif %}
                 </div>
             {% elif not user.is_authenticated %}
-                <div class="rounded-lg border border-hairline bg-surface-card p-6">
+                <div class="pixel-panel p-6">
                     <h2 class="text-lg font-semibold text-ink">Claim this bounty</h2>
                     <p class="mt-3 text-sm text-muted">Log in before claiming this task.</p>
-                    <a href="{% url 'login' %}" class="mt-4 inline-flex rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-on-primary no-underline hover:bg-primary-active">Log in</a>
+                    <a href="{% url 'login' %}" class="pixel-button mt-4 inline-flex">Log in</a>
                 </div>
             {% endif %}
 
             {# Poster: see pending claimants #}
             {% if user.is_authenticated and user == task.poster %}
-                <div class="rounded-lg border border-hairline bg-surface-card p-6">
+                <div class="pixel-panel p-6">
                     <h2 class="text-lg font-semibold text-ink">Claimants</h2>
                     {% if claims %}
                         <div class="mt-4 space-y-3">
                             {% for claim in claims %}
-                                <div class="flex items-center justify-between rounded-md bg-canvas-soft p-4">
+                                <div class="flex items-center justify-between border-4 border-ink bg-canvas-soft p-4">
                                     <div>
                                         <p class="text-sm font-semibold text-ink"><a href="{% url 'user_profile' username=claim.hunter.username %}" class="text-ink no-underline hover:text-primary">@{{ claim.hunter.username }}</a></p>
                                         <p class="text-xs text-muted mt-0.5">Claimed {{ claim.created_at|timesince }} ago</p>
@@ -59,11 +59,11 @@
                                     <div class="flex gap-2">
                                         <form method="post" action="{% url 'accept_claim' task.id claim.id %}">
                                             {% csrf_token %}
-                                            <button class="rounded-md bg-primary px-4 py-1.5 text-xs font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Accept</button>
+                                            <button class="pixel-button" type="submit">Accept</button>
                                         </form>
                                         <form method="post" action="{% url 'reject_claim' task.id claim.id %}">
                                             {% csrf_token %}
-                                            <button class="rounded-md border border-hairline bg-surface-card px-4 py-1.5 text-xs font-medium text-ink hover:border-hairline-strong cursor-pointer" type="submit">Reject</button>
+                                            <button class="pixel-button-dark" type="submit">Reject</button>
                                         </form>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
 
         {# --- IN PROGRESS: Show proof upload or approve button --- #}
         {% elif task.status == 'in_progress' %}
-            <div class="rounded-lg border border-hairline bg-surface-card p-6">
+            <div class="pixel-panel p-6">
                 <h2 class="text-lg font-semibold text-ink">Bounty in progress</h2>
                 {% if task.hunter %}
                     <p class="mt-3 text-sm text-muted">Hunter: <a href="{% url 'user_profile' username=task.hunter.username %}" class="text-muted no-underline hover:text-primary">@{{ task.hunter.username }}</a></p>
@@ -89,7 +89,7 @@
                             {% csrf_token %}
                             {{ proof_form.image }}
                             {{ proof_form.description }}
-                            <button class="w-full rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Submit Proof</button>
+                            <button class="pixel-button w-full" type="submit">Submit Proof</button>
                         </form>
                     {% endif %}
                 {% endif %}
@@ -99,9 +99,9 @@
                         <div class="mt-4 space-y-3">
                             <p class="text-sm font-semibold text-ink">Submitted proof:</p>
                             {% for proof in proofs %}
-                                <div class="rounded-md bg-canvas-soft p-4">
+                                <div class="border-4 border-ink bg-canvas-soft p-4">
                                     {% if proof.image %}
-                                        <img src="{{ proof.image.url }}" alt="Proof image" class="mb-2 max-h-48 rounded object-cover">
+                                        <img src="{{ proof.image.url }}" alt="Proof image" class="mb-2 max-h-48 border-4 border-ink object-cover">
                                     {% endif %}
                                     {% if proof.description %}
                                         <p class="text-sm text-body">{{ proof.description }}</p>
@@ -113,14 +113,14 @@
                     {% endif %}
                     <form class="mt-4" method="post" action="{% url 'approve_completion' task.id %}">
                         {% csrf_token %}
-                        <button class="w-full rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Approve Completion</button>
+                        <button class="pixel-button w-full" type="submit">Approve Completion</button>
                     </form>
                 {% endif %}
             </div>
 
         {# --- COMPLETED (poster approved proof, waiting for hunter to confirm payment) --- #}
         {% elif task.status == 'completed' %}
-            <div class="rounded-lg border border-hairline bg-surface-card p-6">
+            <div class="pixel-panel p-6">
                 <h2 class="text-lg font-semibold text-ink">Bounty completed</h2>
                 {% if task.hunter %}
                     <p class="mt-3 text-sm text-muted">Completed by: <a href="{% url 'user_profile' username=task.hunter.username %}" class="text-muted no-underline hover:text-primary">@{{ task.hunter.username }}</a></p>
@@ -129,7 +129,7 @@
                     <p class="mt-3 text-sm text-body">The poster approved your work. Confirm once you've received payment to close the bounty.</p>
                     <form class="mt-4" method="post" action="{% url 'confirm_payment' task.id %}">
                         {% csrf_token %}
-                        <button class="w-full rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Confirm Payment Received</button>
+                        <button class="pixel-button w-full" type="submit">Confirm Payment Received</button>
                     </form>
                 {% elif user.is_authenticated and user == task.poster %}
                     <p class="mt-3 text-sm text-muted">Waiting for the hunter to confirm payment.</p>
@@ -140,7 +140,7 @@
 
         {# --- DONE / CLOSED --- #}
         {% else %}
-            <div class="rounded-lg border border-hairline bg-surface-card p-6">
+            <div class="pixel-panel p-6">
                 <h2 class="text-lg font-semibold text-ink">Bounty {{ task.get_status_display|lower }}</h2>
                 {% if task.hunter %}
                     <p class="mt-3 text-sm text-muted">Completed by: <a href="{% url 'user_profile' username=task.hunter.username %}" class="text-muted no-underline hover:text-primary">@{{ task.hunter.username }}</a></p>
@@ -154,24 +154,24 @@
 </section>
 
 {% if can_review %}
-    <div class="rounded-lg border border-hairline bg-surface-card p-6 mt-12">
+    <div class="pixel-panel p-6 mt-12">
         <h3 class="text-lg font-semibold text-ink">Leave a review</h3>
         <p class="mt-1 text-sm text-muted">Rate your experience working on this bounty.</p>
         <form class="mt-4 space-y-4" method="post" action="{% url 'review_create' task.id %}">
             {% csrf_token %}
             <div>
-                <label class="mb-1 block text-sm font-medium text-ink">Rating</label>
+                <label class="pixel-label">Rating</label>
                 {{ review_form.rating }}
             </div>
             <div>
-                <label class="mb-1 block text-sm font-medium text-ink">Comment</label>
+                <label class="pixel-label">Comment</label>
                 {{ review_form.comment }}
             </div>
-            <button class="w-full rounded-md bg-primary px-5 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Submit Review</button>
+            <button class="pixel-button w-full" type="submit">Submit Review</button>
         </form>
     </div>
 {% elif my_review %}
-    <div class="rounded-lg border border-hairline bg-surface-card p-6 mt-12">
+    <div class="pixel-panel-sm p-6 mt-12">
         <p class="text-sm text-muted">You reviewed this bounty: <span class="font-semibold text-ink">{{ my_review.rating }}/5</span></p>
     </div>
 {% endif %}
@@ -179,7 +179,7 @@
 {% if reviews %}
     <h3 class="text-xl font-normal tracking-tight mt-12 mb-5 text-ink">Reviews</h3>
     {% for review in reviews %}
-        <div class="rounded-lg border border-hairline bg-surface-card p-6 mb-3">
+        <div class="pixel-panel-sm p-6 mb-3">
             <p class="font-medium text-ink text-sm">
                 <a href="{% url 'user_profile' username=review.reviewer.username %}" class="text-ink no-underline hover:text-primary">@{{ review.reviewer.username }}</a>
                 <span class="text-muted">&rarr;</span>

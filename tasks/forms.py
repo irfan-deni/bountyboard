@@ -9,23 +9,23 @@ class TaskForm(forms.ModelForm):
         fields = ['title', 'description', 'category', 'bounty', 'deadline']
         widgets = {
             'title': forms.TextInput(attrs={
-                'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
                 'placeholder': 'Print and deliver my assignment',
             }),
             'description': forms.Textarea(attrs={
-                'class': 'min-h-32 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
                 'placeholder': 'Describe the task, location, and any special instructions.',
             }),
             'category': forms.Select(attrs={
-                'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
             }),
             'bounty': forms.NumberInput(attrs={
-                'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
                 'min': '1',
                 'step': '0.50',
             }),
             'deadline': forms.DateTimeInput(attrs={
-                'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
                 'type': 'datetime-local',
             }),
         }
@@ -37,10 +37,10 @@ class ProofForm(forms.ModelForm):
         fields = ['image', 'description']
         widgets = {
             'image': forms.ClearableFileInput(attrs={
-                'class': 'w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
             }),
             'description': forms.Textarea(attrs={
-                'class': 'min-h-24 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-indigo-100',
+                'class': 'pixel-input',
                 'placeholder': 'Optional description of the completed work.',
                 'rows': 3,
             }),
@@ -53,10 +53,10 @@ class ReviewForm(forms.ModelForm):
         fields = ['rating', 'comment']
         widgets = {
             'rating': forms.Select(attrs={
-                'class': 'w-full rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none',
+                'class': 'pixel-input',
             }),
             'comment': forms.Textarea(attrs={
-                'class': 'w-full rounded-md border border-hairline bg-surface-card px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none',
+                'class': 'pixel-input',
                 'rows': 3,
                 'placeholder': 'Share how it went...',
             }),

@@ -4,8 +4,8 @@
 
 {% block content %}
 <section class="mx-auto max-w-2xl">
-    <div class="rounded-lg border border-hairline bg-surface-card p-8">
-        <h1 class="text-2xl font-normal tracking-tight text-ink">Post a Bounty</h1>
+    <div class="pixel-panel p-8">
+        <h1 class="font-display text-2xl tracking-tight text-ink">Post a Bounty</h1>
         <p class="mt-2 text-base leading-relaxed text-muted">Make the task clear, price it fairly in RM/MYR, and set a realistic deadline.</p>
         <p class="mt-5 rounded-md bg-canvas-soft px-5 py-4 text-sm font-medium text-ink">BountyBoard does not process payment. Students arrange payment outside the system after completion.</p>
 
@@ -13,14 +13,14 @@
             {% csrf_token %}
             {% for field in form %}
                 <div>
-                    <label class="mb-2 block text-sm font-semibold text-ink" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label class="pixel-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                     {% for error in field.errors %}
                         <p class="mt-2 text-sm font-medium text-semantic-error">{{ error }}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
-            <button class="w-full rounded-md bg-primary px-6 py-3 text-sm font-medium text-on-primary hover:bg-primary-active cursor-pointer" type="submit">Publish Bounty</button>
+            <button class="pixel-button w-full" type="submit">Publish Bounty</button>
         </form>
     </div>
 </section>

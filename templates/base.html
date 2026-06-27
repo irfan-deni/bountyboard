@@ -5,25 +5,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}BountyBoard{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 </head>
 <body class="bg-canvas text-ink font-sans antialiased">
-    <header class="bg-canvas border-b border-hairline">
+    <header class="bg-canvas border-b-4 border-ink">
         <div class="max-w-5xl mx-auto px-5 h-16 flex items-center justify-between">
-            <a href="{% url 'home' %}" class="no-underline text-ink font-semibold text-lg tracking-tight">BountyBoard</a>
+            <a href="{% url 'home' %}" class="no-underline text-ink font-display font-semibold text-base tracking-tight">BountyBoard</a>
             <nav class="flex items-center gap-6 text-sm font-medium">
-                <a href="{% url 'browse' %}" class="text-ink no-underline hover:text-primary">Browse</a>
+                <a href="{% url 'browse' %}" class="text-ink no-underline hover:text-primary uppercase tracking-wide font-bold text-xs">Browse</a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="text-muted no-underline hover:text-primary">Hi, {{ user.username }}</a>
-                    <a href="{% url 'my_tasks' %}" class="text-ink no-underline hover:text-primary">My Tasks</a>
-                    <a href="{% url 'task_create' %}" class="text-ink no-underline hover:text-primary">Post a Bounty</a>
+                    <a href="{% url 'profile' %}" class="text-muted no-underline hover:text-primary uppercase tracking-wide font-bold text-xs">Hi, {{ user.username }}</a>
+                    <a href="{% url 'my_tasks' %}" class="text-ink no-underline hover:text-primary uppercase tracking-wide font-bold text-xs">My Tasks</a>
+                    <a href="{% url 'task_create' %}" class="text-ink no-underline hover:text-primary uppercase tracking-wide font-bold text-xs">Post a Bounty</a>
                     <form method="post" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}
-                        <button type="submit" class="text-ink hover:text-primary bg-transparent border-none cursor-pointer text-sm font-medium">Log Out</button>
+                        <button type="submit" class="text-ink hover:text-primary bg-transparent border-none cursor-pointer uppercase tracking-wide font-bold text-xs">Log Out</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'login' %}" class="text-ink no-underline hover:text-primary">Log In</a>
-                    <a href="{% url 'register' %}" class="text-ink no-underline hover:text-primary">Register</a>
+                    <a href="{% url 'login' %}" class="text-ink no-underline hover:text-primary uppercase tracking-wide font-bold text-xs">Log In</a>
+                    <a href="{% url 'register' %}" class="text-ink no-underline hover:text-primary uppercase tracking-wide font-bold text-xs">Register</a>
                 {% endif %}
             </nav>
         </div>
@@ -32,7 +35,7 @@
     <main class="max-w-5xl mx-auto px-5 py-12">
         {% if messages %}
             {% for message in messages %}
-                <div class="border border-hairline bg-surface-card text-ink px-5 py-3 mb-6 text-sm font-medium">
+                <div class="pixel-panel-sm text-ink px-5 py-3 mb-6 text-sm font-bold">
                     {{ message }}
                 </div>
             {% endfor %}
