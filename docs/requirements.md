@@ -26,7 +26,7 @@ Poster and Hunter are task-based labels, not separate account types. A student i
 
 ### Profiles
 
-- Profiles should show username, XP, rank, rating, bio, avatar, and badges when those features are available.
+- Profiles should show username, rating, bio, and avatar when those features are available.
 - Hunters should show claimed or completed tasks.
 - Posters should show posted tasks.
 - Ratings should help other users judge trustworthiness.
@@ -62,7 +62,7 @@ Poster and Hunter are task-based labels, not separate account types. A student i
 
 - The assigned student can submit proof of completion, such as an uploaded image.
 - The task creator can review the proof before approving completion.
-- Completed tasks should update the hunter's XP and progress.
+- Completed tasks should update the hunter's progress.
 
 ### Reviews
 
@@ -70,17 +70,10 @@ Poster and Hunter are task-based labels, not separate account types. A student i
 - Reviews include a 1 to 5 rating and a written comment.
 - Profile rating should be based on received reviews.
 
-### Gamification Enhancements
-
-- Hunters earn XP from completed jobs.
-- Hunter ranks should progress from Novice to Apprentice, Expert, and Elite Hunter.
-- Badges should be awarded for achievements such as reliability, speed, and category specialization.
-- A leaderboard should show top hunters by XP, completed tasks, or weekly activity.
-
 ### Admin Moderation
 
 - Admins can manage users and profiles.
-- Admins can manage tasks, bids, reviews, and badges.
+- Admins can manage tasks, bids, and reviews.
 - Admins can remove inappropriate listings or problematic users.
 
 ## Non-Functional Requirements
@@ -101,7 +94,6 @@ Poster and Hunter are task-based labels, not separate account types. A student i
 - Task creation page
 - Task detail page
 - Profile page
-- Leaderboard page for future gamification
 - Login and registration pages
 - Admin panel
 
@@ -121,5 +113,5 @@ Poster and Hunter are task-based labels, not separate account types. A student i
 - A task can move from Open to Claimed to Completed.
 - A completed task can receive a review.
 - The system clearly states that payment is handled outside BountyBoard.
-- Hunter XP, rank, badges, or leaderboard data can be displayed as an enhancement.
+- Hunter reputation and progress data can be displayed as an enhancement.
 - Admin users can moderate core records through Django admin.

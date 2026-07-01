@@ -1,6 +1,6 @@
 # BountyBoard
 
-BountyBoard is a campus-based student task marketplace built with Django. Students can post small paid tasks, hunters can claim or bid on jobs, and both sides build trust through ratings, XP, badges, and rankings.
+BountyBoard is a campus-based student task marketplace built with Django. Students can post small paid tasks, hunters can claim or bid on jobs, and both sides build trust through ratings.
 
 Bounty amounts are listed in RM/MYR. BountyBoard does not process payments; students arrange payment outside the system.
 
@@ -31,7 +31,7 @@ Example bounties:
 | Role | Description |
 | --- | --- |
 | Poster | Posts tasks, sets bounty amounts, approves completion, reviews hunters |
-| Hunter | Browses jobs, claims tasks, submits completion proof, earns XP |
+| Hunter | Browses jobs, claims tasks, submits completion proof, earns reputation |
 | Admin | Moderates users, tasks, categories, and platform activity |
 
 ## Core Features
@@ -44,17 +44,7 @@ Example bounties:
 - Bids or claim messages from hunters
 - Task completion proof uploads
 - Reviews and ratings between users
-- XP, hunter ranks, badges, and leaderboard support
 - Django admin panel for moderation
-
-## Gamification
-
-- Hunter ranks: Novice, Apprentice, Expert, Elite Hunter
-- Reputation score from reviews
-- XP rewards for completed jobs
-- Streak bonus for consistent task completion
-- Badge system such as Speed Demon, Reliable, and Specialist
-- Weekly leaderboard for top hunters
 
 ## Task Categories
 
@@ -72,7 +62,7 @@ Example bounties:
 bountyboard/
 ├── core/              # Django project settings and root URLs
 ├── tasks/             # Task, bid, and review models
-├── users/             # User profile and badge models
+├── users/             # User profile models
 ├── docs/              # Project documentation
 ├── manage.py
 ├── README.md
@@ -84,11 +74,10 @@ bountyboard/
 Main data models:
 
 - User: provided by Django auth
-- Profile: role, XP, rank, rating, bio, avatar
+- Profile: rating, bio, avatar
 - Task: poster, hunter, title, description, bounty, category, status, deadline, proof image
 - Bid: task, hunter, message, timestamp
 - Review: task, reviewer, reviewee, rating, comment
-- Badge: profile, name, description, earned date
 
 ## App Flow
 
@@ -97,8 +86,7 @@ Home -> Browse open bounties
 Search -> Filter by category, bounty, and deadline
 Post Task -> Create a campus bounty
 Task Detail -> View details, bid, claim, or submit proof
-Profile -> View posted tasks, completed jobs, badges, rating, and rank
-Leaderboard -> View top hunters
+Profile -> View posted tasks, completed jobs, and rating
 Admin Panel -> Manage users, tasks, reviews, and moderation
 ```
 
