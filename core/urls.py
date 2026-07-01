@@ -19,11 +19,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from . import views
+
 urlpatterns = [
     path('', include('tasks.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/', include('users.urls')),
     path('admin/', admin.site.urls),
+    path('admin-panel/', views.admin_dashboard, name='admin_dashboard'),
 ]
 
 if settings.DEBUG:

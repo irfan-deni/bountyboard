@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | BountyBoard{% endblock %}
+{% block content %}
+<h1 class="mb-8 font-display text-2xl font-normal text-ink">Admin Dashboard</h1>
+
+<section class="mb-10">
+    <h2 class="mb-5 text-xl font-normal uppercase tracking-wide text-ink">Manage</h2>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <a href="{% url 'admin:auth_user_changelist' %}" class="pixel-panel-sm p-5 no-underline hover:border-hairline-strong">
+            <p class="font-semibold text-ink">Users</p>
+            <p class="mt-1 text-xs text-muted">Manage accounts, passwords, and staff status</p>
+        </a>
+        <a href="{% url 'admin:users_profile_changelist' %}" class="pixel-panel-sm p-5 no-underline hover:border-hairline-strong">
+            <p class="font-semibold text-ink">Profiles</p>
+            <p class="mt-1 text-xs text-muted">View and edit student profiles</p>
+        </a>
+        <a href="{% url 'admin:tasks_task_changelist' %}" class="pixel-panel-sm p-5 no-underline hover:border-hairline-strong">
+            <p class="font-semibold text-ink">Tasks</p>
+            <p class="mt-1 text-xs text-muted">Browse, edit, or remove bounties</p>
+        </a>
+        <a href="{% url 'admin:tasks_claim_changelist' %}" class="pixel-panel-sm p-5 no-underline hover:border-hairline-strong">
+            <p class="font-semibold text-ink">Claims</p>
+            <p class="mt-1 text-xs text-muted">Review and moderate task claims</p>
+        </a>
+        <a href="{% url 'admin:tasks_proof_changelist' %}" class="pixel-panel-sm p-5 no-underline hover:border-hairline-strong">
+            <p class="font-semibold text-ink">Proofs</p>
+            <p class="mt-1 text-xs text-muted">Review submitted proof images</p>
+        </a>
+        <a href="{% url 'admin:tasks_review_changelist' %}" class="pixel-panel-sm p-5 no-underline hover:border-hairline-strong">
+            <p class="font-semibold text-ink">Reviews</p>
+            <p class="mt-1 text-xs text-muted">Moderate ratings and comments</p>
+        </a>
+    </div>
+</section>
+
+<section>
+    <h2 class="mb-5 text-xl font-normal uppercase tracking-wide text-ink">Overview</h2>
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ total_users }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Users</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ total_tasks }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Total Tasks</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ open_tasks }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Open</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ in_progress_tasks }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">In Progress</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ completed_tasks }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Completed</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ pending_claims }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Pending Claims</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ total_reviews }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Reviews</p>
+        </div>
+        <div class="pixel-panel p-5 text-center">
+            <p class="text-3xl font-display text-ink">{{ avg_rating }}</p>
+            <p class="mt-1 text-xs uppercase tracking-wide text-muted">Avg Rating</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
