@@ -1,6 +1,9 @@
 <article class="flex h-full flex-col pixel-panel p-6">
     <div class="mb-3 flex items-start justify-between gap-3">
-        <span class="pixel-tag">{{ task.get_category_display }}</span>
+        <div class="flex items-center gap-2">
+            <span class="pixel-tag">{{ task.get_category_display }}</span>
+            <span class="pixel-tag">{{ task.get_status_display }}</span>
+        </div>
         <span class="whitespace-nowrap text-lg font-semibold text-ink">RM {{ task.bounty }}</span>
     </div>
 

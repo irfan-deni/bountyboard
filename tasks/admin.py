@@ -40,7 +40,7 @@ class ReviewAdmin(admin.ModelAdmin):
 class ClaimAdmin(admin.ModelAdmin):
     list_display = ('task', 'hunter', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('task__title', 'hunter__username')
+    search_fields = ('task__title', 'hunter__username', 'message')
     ordering = ('-created_at',)
     autocomplete_fields = ('task', 'hunter')
 

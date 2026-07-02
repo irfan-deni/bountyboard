@@ -30,8 +30,14 @@
                     {% if has_claimed %}
                         <p class="mt-4 text-sm text-muted">You already claimed this bounty. Waiting for the poster to review.</p>
                     {% else %}
-                        <form class="mt-4" method="post" action="{% url 'claim_task' task.id %}">
+                        <form class="mt-4 space-y-4" method="post" action="{% url 'claim_task' task.id %}">
                             {% csrf_token %}
+                            {% if claim_form %}
+                                <div>
+                                    <label class="pixel-label">Message (optional)</label>
+                                    {{ claim_form.message }}
+                                </div>
+                            {% endif %}
                             <button class="pixel-button w-full" type="submit">Claim Bounty</button>
                         </form>
                     {% endif %}
@@ -51,10 +57,13 @@
                     {% if claims %}
                         <div class="mt-4 space-y-3">
                             {% for claim in claims %}
-                                <div class="flex items-center justify-between border-4 border-ink bg-canvas-soft p-4">
+                                <div class="flex items-start justify-between border-4 border-ink bg-canvas-soft p-4">
                                     <div>
                                         <p class="text-sm font-semibold text-ink"><a href="{% url 'user_profile' username=claim.hunter.username %}" class="text-ink no-underline hover:text-primary">@{{ claim.hunter.username }}</a></p>
                                         <p class="text-xs text-muted mt-0.5">Claimed {{ claim.created_at|timesince }} ago</p>
+                                        {% if claim.message %}
+                                            <p class="mt-1 text-sm text-body">&ldquo;{{ claim.message }}&rdquo;</p>
+                                        {% endif %}
                                     </div>
                                     <div class="flex gap-2">
                                         <form method="post" action="{% url 'accept_claim' task.id claim.id %}">

@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_date
 
-from .forms import ProofForm, TaskForm, ReviewForm
+from .forms import ClaimForm, ProofForm, TaskForm, ReviewForm
 from .models import Claim, Proof, Review, Task
 
 
@@ -46,12 +46,14 @@ def task_detail(request, task_id):
 
     has_claimed = False
     claims = []
+    claim_form = None
     proof_form = None
     proofs = []
 
     if request.user.is_authenticated:
         if task.status == 'open' and task.poster != request.user:
             has_claimed = Claim.objects.filter(task=task, hunter=request.user).exists()
+            claim_form = ClaimForm() if not has_claimed else None
 
         if task.poster == request.user:
             claims = task.claims.filter(status='pending').select_related('hunter__profile')
@@ -76,6 +78,7 @@ def task_detail(request, task_id):
         'reviews': reviews,
         'has_claimed': has_claimed,
         'claims': claims,
+        'claim_form': claim_form,
         'proof_form': proof_form,
         'proofs': proofs,
         'review_form': review_form,
@@ -95,7 +98,11 @@ def claim_task(request, task_id):
         messages.error(request, 'You cannot claim your own bounty.')
         return redirect('task_detail', task_id=task.id)
 
-    _, created = Claim.objects.get_or_create(task=task, hunter=request.user)
+    form = ClaimForm(request.POST)
+    message = form.cleaned_data['message'].strip() if form.is_valid() else ''
+    _, created = Claim.objects.get_or_create(
+        task=task, hunter=request.user, defaults={'message': message},
+    )
     if created:
         messages.success(request, 'Your claim has been submitted. The poster will review it.')
     else:

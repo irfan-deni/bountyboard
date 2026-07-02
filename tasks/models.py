@@ -44,6 +44,7 @@ class Claim(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='claims')
     hunter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='claims')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    message = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

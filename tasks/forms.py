@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Proof, Task, Review
+from .models import Claim, Proof, Task, Review
 
 
 class TaskForm(forms.ModelForm):
@@ -43,6 +43,19 @@ class ProofForm(forms.ModelForm):
                 'class': 'pixel-input',
                 'placeholder': 'Optional description of the completed work.',
                 'rows': 3,
+            }),
+        }
+
+
+class ClaimForm(forms.ModelForm):
+    class Meta:
+        model = Claim
+        fields = ['message']
+        widgets = {
+            'message': forms.Textarea(attrs={
+                'class': 'pixel-input',
+                'rows': 3,
+                'placeholder': 'Optional: tell the poster why you are the right pick.',
             }),
         }
 

@@ -195,7 +195,11 @@ class Command(BaseCommand):
             Claim.objects.get_or_create(
                 task=in_progress_task,
                 hunter=in_progress_task.hunter,
-                defaults={"status": "accepted"},
+                defaults={
+                    "status": "accepted",
+                    "message": "I fixed this exact error in my own project last "
+                    "week - can hop on a call tonight.",
+                },
             )
         # Also add a pending claim from another user to demo the queue.
         for username in usernames:
@@ -204,7 +208,11 @@ class Command(BaseCommand):
                 Claim.objects.get_or_create(
                     task=in_progress_task,
                     hunter=candidate,
-                    defaults={"status": "pending"},
+                    defaults={
+                        "status": "pending",
+                        "message": "Took the Django module last sem, happy to "
+                        "help debug.",
+                    },
                 )
                 break
 
