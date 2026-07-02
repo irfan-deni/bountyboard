@@ -41,7 +41,7 @@ Example bounties:
 - Task posting with title, description, bounty, category, deadline, and status
 - RM/MYR bounty display with payment handled outside the platform
 - Open task browsing and category filtering
-- Bids or claim messages from hunters
+- Claims with optional messages from hunters
 - Task completion proof uploads
 - Reviews and ratings between users
 - Django admin panel for moderation
@@ -74,9 +74,10 @@ bountyboard/
 Main data models:
 
 - User: provided by Django auth
-- Profile: rating, bio, avatar
-- Task: poster, hunter, title, description, bounty, category, status, deadline, proof image
-- Bid: task, hunter, message, timestamp
+- Profile: phone, bio, avatar (rating is computed from received reviews)
+- Task: poster, hunter, title, description, bounty, category, status, deadline
+- Claim: task, hunter, status, message
+- Proof: task, hunter, image, description
 - Review: task, reviewer, reviewee, rating, comment
 
 ## App Flow
@@ -117,6 +118,12 @@ Run database migrations:
 ```bash
 python manage.py makemigrations
 python manage.py migrate
+```
+
+Optional: load demo users and tasks (all demo accounts use password `demo12345`):
+
+```bash
+python manage.py seed_demo --fresh
 ```
 
 Create an admin user:
