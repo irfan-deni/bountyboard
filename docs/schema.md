@@ -75,6 +75,7 @@ A hunter's request to take on a task. The poster reviews claims and accepts one,
 |---|---|---|
 | task | ForeignKey → Task | `on_delete=CASCADE`, `related_name='claims'` |
 | hunter | ForeignKey → User | `on_delete=CASCADE`, `related_name='claims'` |
+| message | TextField | `blank=True`; optional message from the hunter when submitting the claim |
 | status | CharField(max_length=10) | `default='pending'`; choices: `pending`, `accepted`, `rejected` |
 | created_at | DateTimeField | `auto_now_add=True` |
 
