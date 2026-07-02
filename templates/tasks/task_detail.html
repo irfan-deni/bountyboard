@@ -57,15 +57,13 @@
                     {% if claims %}
                         <div class="mt-4 space-y-3">
                             {% for claim in claims %}
-                                <div class="flex items-start justify-between border-4 border-ink bg-canvas-soft p-4">
-                                    <div>
+                                <div class="border-4 border-ink bg-canvas-soft p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
                                         <p class="text-sm font-semibold text-ink"><a href="{% url 'user_profile' username=claim.hunter.username %}" class="text-ink no-underline hover:text-primary">@{{ claim.hunter.username }}</a></p>
                                         <p class="text-xs text-muted mt-0.5">Claimed {{ claim.created_at|timesince }} ago</p>
-                                        {% if claim.message %}
-                                            <p class="mt-1 text-sm text-body">&ldquo;{{ claim.message }}&rdquo;</p>
-                                        {% endif %}
-                                    </div>
-                                    <div class="flex gap-2">
+                                        </div>
+                                        <div class="flex gap-2">
                                         <form method="post" action="{% url 'accept_claim' task.id claim.id %}">
                                             {% csrf_token %}
                                             <button class="pixel-button" type="submit">Accept</button>
@@ -74,7 +72,11 @@
                                             {% csrf_token %}
                                             <button class="pixel-button-dark" type="submit">Reject</button>
                                         </form>
+                                        </div>
                                     </div>
+                                    {% if claim.message %}
+                                        <p class="mt-2 text-sm text-body">&ldquo;{{ claim.message }}&rdquo;</p>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         </div>
